@@ -2,7 +2,7 @@
 
 import { assertSpyCallArg, assertSpyCalls, spy } from "jsr:@std/testing/mock";
 
-import { from, map, Subject, tap } from "../index.ts";
+import { from, map, Subject, tap } from "../src/index.ts";
 
 Deno.test("tap operator - call the provided function with each value", () => {
   const obs$ = from(1, 2, 3);
