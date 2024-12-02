@@ -1,0 +1,10 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#6a6e11",
+    "titleBar.activeBackground": "#334fbb",
+    "titleBar.activeForeground": "#f0f643"
+  },
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSaveMode": "modifications"
+}

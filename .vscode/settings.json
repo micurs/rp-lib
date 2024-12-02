@@ -1,0 +1,20 @@
+{
+  "deno.future": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "modifications",
+  "code-runner.executorMap": {
+    "typescript": "deno run"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "deno.enable": true,
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#302F0B",
+    "titleBar.activeBackground": "#43420F",
+    "titleBar.activeForeground": "#FCFBF0"
+  }
+}

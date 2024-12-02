@@ -1,0 +1,17 @@
+{
+  "tasks": {
+    "test": "deno test --coverage && deno coverage",
+    "cli-demo": "deno run cli-demo/main.ts",
+    "react-demo": "deno run --allow-net --allow-read jsr:@std/http@1/file-server react-demo/dist/"
+  },
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "jsxImportSourceTypes": "@types/react"
+  },
+  "workspace": ["./rp-lib", "./cli-demo", "react-demo"],
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  }
+}
