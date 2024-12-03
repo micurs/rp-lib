@@ -1,12 +1,8 @@
 import type { Observable } from "./index.ts";
 import { Subject } from "./index.ts";
-import { EventEmitter } from "node:events";
+// import { EventEmitter } from "node:events";
 
-export const defer = (tm = 0): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(), tm);
-  });
-};
+
 
 /**
  * Creates a Observable that will emit a sequence of values from the given array.
@@ -61,18 +57,18 @@ export const range = (start: number, count: number): Observable<number> => {
  * @param eventName - the event name
  * @returns an Observable emitting events
  */
-export const fromEvent = (
-  target: EventTarget | EventEmitter,
-  eventName: string,
-): Observable<Event> => {
-  const eventObs$ = new Subject<Event>();
-  if (target instanceof EventEmitter) {
-    target.on(eventName, (event) => eventObs$.emit(event));
-  } else {
-    target.addEventListener(eventName, (event) => eventObs$.emit(event));
-  }
-  return eventObs$;
-};
+// export const fromEvent = (
+//   target: EventTarget | EventEmitter,
+//   eventName: string,
+// ): Observable<Event> => {
+//   const eventObs$ = new Subject<Event>();
+//   if (target instanceof EventEmitter) {
+//     target.on(eventName, (event) => eventObs$.emit(event));
+//   } else {
+//     target.addEventListener(eventName, (event) => eventObs$.emit(event));
+//   }
+//   return eventObs$;
+// };
 
 /**
  * Creates an Observable that will emit with a given delay a set of values.

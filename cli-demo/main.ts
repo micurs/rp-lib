@@ -1,10 +1,3 @@
-import { Observable, version } from "@rp/lib";
+import * as basic from "./basic.ts";
 
-console.log(version());
-
-const myObservable$ = new Observable<number>();
-myObservable$.subscribe(val => console.log(val));
-myObservable$.emit(100);
-myObservable$.emit(50);
-myObservable$.emit(10);
-myObservable$.complete();
+basic.main();

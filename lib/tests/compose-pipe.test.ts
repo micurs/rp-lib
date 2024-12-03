@@ -2,7 +2,7 @@
 
 import { assertSpyCallArg, assertSpyCalls, spy } from "jsr:@std/testing/mock";
 
-import { compose, fromArray, map, pipe } from "../index.ts";
+import { compose, fromArray, map, pipe } from "../src/index.ts";
 
 Deno.test("pipe - accepts two map operators and produce the composition of both", () => {
   const obs$ = fromArray([1, 2, 3]);

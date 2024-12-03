@@ -8,6 +8,9 @@ export interface FullSubscriber<T> {
   complete?: () => void;
 }
 
+/**
+ * A SubscriberFn is a function that listens to values emitted by an Observable.
+ */
 export type SubscriberFn<T> = (value: T) => void;
 
 /**

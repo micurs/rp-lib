@@ -1,5 +1,5 @@
+import type { Observable, Operator } from "../types.ts";
 import { Subject } from "../index.ts";
-import type { Observable } from "../types.ts";
 
 /**
  * A transformer operator that applies a side effect to each value emitted by the source observable.
@@ -8,7 +8,7 @@ import type { Observable } from "../types.ts";
  * @returns a new observable that emits the same values as the source observable, but with the side effect applied.
  */
 export const tap =
-  <T>(sideEffect: (value: T) => void) => (source$: Observable<T>) => {
+  <T>(sideEffect: (value: T) => void): Operator<T, T> => (source$: Observable<T>): Observable<T> => {
     const result$ = new Subject<T>();
     result$.onSubscribe(() => {
       source$.subscribe({

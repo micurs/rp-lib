@@ -1,4 +1,4 @@
-import type { Observable } from "../index.ts";
+import type { Observable, Operator } from "../index.ts";
 import { Subject } from "../index.ts";
 
 /**
@@ -9,8 +9,8 @@ import { Subject } from "../index.ts";
  * @param source$ - the source observable
  * @returns a new observable that emits the flattened values
  */
-export const flatMap = <I, O>(mapFn: (value: I) => Observable<O>) => {
-  return (source$: Observable<I>) => {
+export const flatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O> => {
+  return (source$: Observable<I>): Observable<O> => {
     const result$ = new Subject<O>();
     result$.onSubscribe(() => {
       source$.subscribe({

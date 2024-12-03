@@ -1,0 +1,7 @@
+{
+  // Used by vite during type-checking
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+  }
+}

@@ -10,7 +10,7 @@ import {
   fromPromise,
   interval,
   map,
-} from "../index.ts";
+} from "../src/index.ts";
 
 Deno.test("Operator flatMap flattens the result of a mapped observable", async () => {
   // A generator that emits 3 values after 5, 10 and 15 ms

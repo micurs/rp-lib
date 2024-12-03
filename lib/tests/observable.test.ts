@@ -3,7 +3,7 @@
 import { expect } from "jsr:@std/expect";
 import { assertSpyCalls, spy } from "jsr:@std/testing/mock";
 
-import { Subject } from "../index.ts";
+import { Subject } from "../src/index.ts";
 
 Deno.test("Creates an observable", () => {
   const obs$ = new Subject(10);

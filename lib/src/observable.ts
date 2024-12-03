@@ -5,13 +5,23 @@ import type {
   Subscription,
 } from "./types.ts";
 
+/**
+ * The type of the function that is executed on first subscription
+ */
 type OnSubscribe = () => void;
 
+/**
+ * Check if a value is an OnSubscribe function
+ * @internal
+ * @param value - the value to check
+ * @returns true if the value is an OnSubscribe function, false otherwise
+ */
 const isOnSubscribe = (value: unknown): value is OnSubscribe =>
   typeof value === "function";
 
 /**
- * A generic multi-cast observable class
+ * A generic multi-cast observable class.
+ * Allows multiple subscribers and to register an emitter function to be executed on first subscription.
  */
 export class Subject<T> implements Observable<T> {
   private _subscribers: FullSubscriber<T>[] = [];
@@ -22,7 +32,7 @@ export class Subject<T> implements Observable<T> {
 
   /**
    * Create a new observable
-   * @param emit -  the value to emit or the onSubscribe function to be execute on first subscription
+   * @param emit -  the value to emit or the onSubscribe function to be executed on first subscription
    */
   constructor(emit?: T | (() => void)) {
     if (isOnSubscribe(emit)) {
@@ -83,16 +93,27 @@ export class Subject<T> implements Observable<T> {
     return { unsubscribe };
   }
 
+  /**
+   * Set the onSubscribe function to be executed on first subscription
+   * @param emitter - the function to be executed on first subscription
+   */
   onSubscribe(emitter: () => void) {
     this._emitter = emitter;
   }
 
+  /**
+   * Emit a value to all subscribers
+   * @param value - the value to emit
+   */
   emit(value: T) {
     this._lastValue = value;
     this._subscribers
       .forEach((subscriber) => subscriber.next(value));
   }
 
+  /**
+   * Complete the Observable
+   */
   complete() {
     this._subscribers
       .forEach((subscriber) => subscriber.complete?.());
@@ -100,6 +121,10 @@ export class Subject<T> implements Observable<T> {
     this._isCompleted = true;
   }
 
+  /**
+   * Emit an error to all subscribers
+   * @param e - the error to emit
+   */
   error(e: Error) {
     this._currentError = e;
     this._subscribers.reduceRight(
@@ -108,11 +133,19 @@ export class Subject<T> implements Observable<T> {
     );
   }
 
+  /**
+   * Get the last value emitted by the Observable
+   * @returns the last value emitted by the Observable
+   */
   get lastValue(): T | undefined {
     return this._lastValue;
   }
 
-  get isCompleted() {
+  /**
+   * Get the completion status of the Observable
+   * @returns the completion status of the Observable
+   */
+  get isCompleted(): boolean {
     return this._isCompleted;
   }
 }

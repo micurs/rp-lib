@@ -1,7 +1,7 @@
 /// <reference lib="deno.ns" />
 import { assertSpyCalls, spy } from "jsr:@std/testing/mock";
 
-import { from, switchMap } from "../index.ts";
+import { from, switchMap } from "../src/index.ts";
 
 Deno.test("switchMap", () => {
   const numbers$ = from(1, 2, 3);

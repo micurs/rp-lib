@@ -1,4 +1,4 @@
-import type { Observable } from "../index.ts";
+import type { Observable, Operator } from "../index.ts";
 import { Subject } from "../index.ts";
 
 /**
@@ -9,7 +9,7 @@ import { Subject } from "../index.ts";
  * @param source$ - the source observable
  * @returns a new observable that emits the values of the latest inner observable
  */
-export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>) => {
+export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O> => {
   return (source$: Observable<I>) => {
     const result$ = new Subject<O>();
     let innerObservable$: Observable<O> | null = null;

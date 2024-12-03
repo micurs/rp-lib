@@ -12,7 +12,7 @@ import {
   fromPromise,
   fromTimer,
   range,
-} from "../index.ts";
+} from "../src/index.ts";
 
 Deno.test("Operator fromArray creates an Observable emitting 2 values", () => {
   const obs$ = fromArray([1, 2]);
