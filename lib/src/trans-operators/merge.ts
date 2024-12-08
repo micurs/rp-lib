@@ -24,3 +24,4 @@ export const merge = <I1, I2>(secondSource$: Observable<I2>): Operator<I1, I1 | 
   });
   return result$;
 };
+

@@ -47,7 +47,7 @@ export class Subject<T> implements Observable<T> {
    * @param subscriber - the subscriber function or object
    * @returns a subscription object
    */
-  subscribe(subscriber: Subscriber<T>): Subscription {
+  subscribe(subscriber: Subscriber<T>, run: boolean = true): Subscription {
     if (this._isCompleted) {
       return { unsubscribe: () => {} };
     }
@@ -80,7 +80,7 @@ export class Subject<T> implements Observable<T> {
     this._subscribers.push(newSubscriber);
 
     // If there is a pending value emits this value to the new subscriber
-    if (this._lastValue !== undefined) {
+    if (this._lastValue !== undefined && run) {
       newSubscriber.next(this._lastValue);
     }
 
@@ -145,7 +145,7 @@ export class Subject<T> implements Observable<T> {
    * Get the last value emitted by the Observable
    * @returns the last value emitted by the Observable
    */
-  get lastValue(): T | undefined {
+  get value(): T | undefined {
     return this._lastValue;
   }
 

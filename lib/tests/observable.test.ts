@@ -7,13 +7,13 @@ import { Subject } from "../src/index.ts";
 
 Deno.test("Creates an observable", () => {
   const obs$ = new Subject(10);
-  expect(obs$.lastValue).toBe(10);
+  expect(obs$.value).toBe(10);
 });
 
 Deno.test("Creates an observable and emit a value", () => {
   const obs$ = new Subject(10);
   obs$.emit(100);
-  expect(obs$.lastValue).toBe(100);
+  expect(obs$.value).toBe(100);
 });
 
 Deno.test("Creates an observable and subscribe with a function", () => {

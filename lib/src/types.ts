@@ -23,11 +23,11 @@ export type Subscriber<A> = SubscriberFn<A> | FullSubscriber<A>;
  * values to a list of Subscribers.
  */
 export interface Observable<T> {
-  subscribe(subscriber: Subscriber<T>): Subscription;
+  subscribe(subscriber: Subscriber<T>, run?: boolean): Subscription;
   emit(value: T): void;
   complete(): void;
   error(error: Error): void;
-
+  value: T | undefined;
   isCompleted: boolean;
 }
 
@@ -44,3 +44,8 @@ export interface Subscription {
  * An Operator is a function that transform an Observable into a new one.
  */
 export type Operator<A, B> = (observable: Observable<A>) => Observable<B>;
+
+/**
+ * An Effect is a function that is executed when an Observable is subscribed to.
+ */
+export type Effect = () => void;
