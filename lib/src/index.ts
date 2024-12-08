@@ -3,8 +3,10 @@ export * from "./observable.ts";
 export * from "./creation-operators.ts";
 export * from "./trans-operators/tap.ts";
 export * from "./trans-operators/map.ts";
+export * from "./trans-operators/concat.ts";
 export * from "./trans-operators/flat-map.ts";
 export * from "./trans-operators/switch-map.ts";
+export * from "./trans-operators/concat-map.ts";
 export * from "./compose-pipe.ts";
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts

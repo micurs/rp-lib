@@ -4,22 +4,21 @@ import dts from 'npm:vite-plugin-dts';
 export default defineConfig({
   plugins:[
     dts({
-      include: 'lib/src',
+      include: 'src',
       insertTypesEntry: true,
       rollupTypes: true,
     }),
   ],
   build: {
     minify: 'esbuild',
-    // sourcemap: true,
+    sourcemap: true,
     reportCompressedSize: true,
     lib: {
-      entry: './lib/src/index.ts',
+      entry: './src/index.ts',
       formats: ['es']
     },
     rollupOptions: {
       output: {
-        sourcemap: true,
         compact: true,
         dir: 'dist',
         entryFileNames: 'index.js',

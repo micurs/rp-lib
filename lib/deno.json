@@ -3,6 +3,7 @@
   "version": "0.0.4",
   "exports": "./src/index.ts",
   "license": "MIT",
+  "description": "A TypeScript Reactive Programming Library used as a tutorial for a course on Reactive Programming.",
   "publish": {
     "include": [
       "readme.md",
@@ -13,6 +14,7 @@
     ]
   },
   "tasks": {
+    "bundle": "deno run --allow-all npm:vite build --config ./vite.config.ts",
     "dev": "deno test --watch",
     "test": "deno test --coverage && deno coverage",
     "coverage": "deno test --coverage && deno coverage --html coverage && open coverage/html/index.html"

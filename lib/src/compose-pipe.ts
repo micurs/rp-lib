@@ -5,6 +5,9 @@ import type { Observable, Operator } from "./types.ts";
  * @param operators - A series of operators to compose.
  * @returns A single operator that is the composition of the input operators.
  */
+export function pipe<I, O>(
+  op1: Operator<I, O>,
+): Operator<I, O>;
 export function pipe<I, O1, O>(
   op1: Operator<I, O1>,
   op2: Operator<O1, O>,

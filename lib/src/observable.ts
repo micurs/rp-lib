@@ -60,6 +60,11 @@ export class Subject<T> implements Observable<T> {
       this._subscribers = this._subscribers.filter((sub) =>
         sub !== newSubscriber
       );
+      // If there are no more subscribers, reset the last value
+      // we avoid the last value being emitted to a new subscriber
+      if (this._subscribers.length === 0) {
+        this._lastValue = undefined;
+      }
     };
 
     // Make sure we are not subscribing more than once with the same subscriber
@@ -106,6 +111,9 @@ export class Subject<T> implements Observable<T> {
    * @param value - the value to emit
    */
   emit(value: T) {
+    if (this._isCompleted) {
+      return;
+    }
     this._lastValue = value;
     this._subscribers
       .forEach((subscriber) => subscriber.next(value));
