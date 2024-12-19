@@ -29,7 +29,11 @@ export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
           });
         },
         error: (err: Error) => result$.error(err),
-        complete: () => innerObservable$ === null && result$.complete(),
+        complete: () => {
+          innerObservable$ !== null
+          && innerObservable$.isCompleted
+          && result$.complete()
+        },
       });
     });
     return result$;

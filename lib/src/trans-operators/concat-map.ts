@@ -26,7 +26,7 @@ export const concatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
         const mapped$ = mapFn(value);
 
         // concatenate the new observable to the inner accumulator
-        innerAccumulator$ = innerAccumulator$ ? concat(mapped$)(innerAccumulator$) : mapped$;
+        innerAccumulator$ = innerAccumulator$ ? concat<O,O>(mapped$)(innerAccumulator$) : mapped$;
 
         // subscribe to the inner accumulator
         prevSubscription = innerAccumulator$.subscribe({

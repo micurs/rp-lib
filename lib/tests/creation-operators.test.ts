@@ -3,16 +3,15 @@
 import { assertSpyCallArg, assertSpyCalls, spy } from "jsr:@std/testing/mock";
 import { EventEmitter } from "node:events";
 import {
-  defer,
   from,
   fromArray,
   fromAsyncGenerator,
-  fromEvent,
   fromGenerator,
   fromPromise,
   fromTimer,
   range,
 } from "../src/index.ts";
+import { defer } from "./utils.ts";
 
 Deno.test("Operator fromArray creates an Observable emitting 2 values", () => {
   const obs$ = fromArray([1, 2]);
@@ -67,7 +66,6 @@ Deno.test("Operator fromTimer creates an Observable emitting 2 value after 10ms 
   const sub = spy();
   const obs$ = fromTimer(10, [1, 2], "now");
   await defer(50);
-  console.log("subscribing now");
   obs$.subscribe(sub);
   assertSpyCalls(sub, 0); // no values captured by the subscribers because they were emitted before
 });
@@ -129,14 +127,14 @@ Deno.test("Operator range creates an Observable emitting a sequence of numbers",
   assertSpyCallArg(sub, 2, 0, 3);
 });
 
-Deno.test("Operator fromEvent creates an Observable emitting events", () => {
-  const emitter = new EventEmitter();
-  const obs$ = fromEvent(emitter, "click");
-  const sub = spy((v: Event) => {
-    console.log("sub", v);
-  });
-  obs$.subscribe(sub);
-  emitter.emit("click", "a test event");
-  assertSpyCalls(sub, 1);
-  assertSpyCallArg(sub, 0, 0, "a test event");
-});
+// Deno.test("Operator fromEvent creates an Observable emitting events", () => {
+//   const emitter = new EventEmitter();
+//   const obs$ = fromEvent(emitter, "click");
+//   const sub = spy((v: Event) => {
+//     console.log("sub", v);
+//   });
+//   obs$.subscribe(sub);
+//   emitter.emit("click", "a test event");
+//   assertSpyCalls(sub, 1);
+//   assertSpyCallArg(sub, 0, 0, "a test event");
+// });

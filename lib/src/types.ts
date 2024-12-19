@@ -37,7 +37,7 @@ export interface Observable<T> {
  * sever that association.
  */
 export interface Subscription {
-  unsubscribe: () => void;
+  unsubscribe: (clear?: boolean) => void;
 }
 
 /**

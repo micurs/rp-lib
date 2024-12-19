@@ -3,7 +3,6 @@
 import { assertSpyCallArg, assertSpyCalls, spy } from "jsr:@std/testing/mock";
 
 import {
-  defer,
   flatMap,
   from,
   fromAsyncGenerator,
@@ -11,6 +10,7 @@ import {
   interval,
   map,
 } from "../src/index.ts";
+import { defer } from "./utils.ts";
 
 Deno.test("Operator flatMap flattens the result of a mapped observable", async () => {
   // A generator that emits 3 values after 5, 10 and 15 ms
