@@ -1,7 +1,7 @@
 /// <reference lib="deno.ns" />
 
 import { expect } from "jsr:@std/expect";
-import { Subject, concat } from "../src/index.ts";
+import { Subject, concat } from "../../src/index.ts";
 
 
 Deno.test("should emit all values from the first observable before the second", () => {

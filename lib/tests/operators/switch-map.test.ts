@@ -1,8 +1,8 @@
 /// <reference lib="deno.ns" />
 import { assertSpyCalls, spy } from "jsr:@std/testing/mock";
-import { from, switchMap, Subject } from "../src/index.ts";
+import { from, switchMap, Subject } from "../../src/index.ts";
 import { expect } from "jsr:@std/expect";
-import { defer } from "./utils.ts";
+import { defer } from "../utils.ts";
 
 Deno.test("switchMap should map and switch inner observables correctly", () => {
   const numbers$ = from(1, 2, 3);

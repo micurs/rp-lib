@@ -1,8 +1,8 @@
 /// <reference lib="deno.ns" />
 
 import { expect } from "jsr:@std/expect";
-import { Subject, concatMap } from "../src/index.ts";
-import { defer } from "./utils.ts";
+import { Subject, concatMap } from "../../src/index.ts";
+import { defer } from "../utils.ts";
 
 Deno.test("concatMap should map values to inner observables and emit them sequentially", async () => {
   const source$ = new Subject<number>();
