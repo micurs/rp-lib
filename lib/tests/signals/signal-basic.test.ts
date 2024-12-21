@@ -62,4 +62,17 @@ Deno.test('Two computed signals emit their computed values when their dependent 
   Signal.effect(effect);
   source1.value = 200;
   assertSpyCalls(effect, 2);
+});
+
+
+Deno.test('Two computed signals emit their computed values when their dependent signal changes', () => {
+  const source1 = new Signal(0);
+  const computed1 = Signal.computed(() => source1.value! + 100);
+  const computed2 = Signal.computed(() => computed1.value! + 100);
+  const effect = spy(() => {
+    console.log('computed2 signals changed to =>', computed2.value);
+  });
+  Signal.effect(effect);
+  source1.value = 1000;
+  assertSpyCalls(effect, 2);
 })
