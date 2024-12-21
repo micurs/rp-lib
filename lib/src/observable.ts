@@ -24,7 +24,7 @@ const isOnSubscribe = (value: unknown): value is OnSubscribe =>
  * Allows multiple subscribers and to register an emitter function to be executed on first subscription.
  */
 export class Subject<T> implements Observable<T> {
-  private _subscribers: Set<FullSubscriber<T>> = new Set();
+  private _subscribers: Array<FullSubscriber<T>> = [];
   private _lastValue: T | undefined;
   private _currentError: Error | undefined = undefined;
   private _isCompleted: boolean = false;
@@ -57,26 +57,24 @@ export class Subject<T> implements Observable<T> {
 
     // Create the unsubscribe function to return
     const unsubscribe = (clear = true) => {
-      this._subscribers.delete(newSubscriber);
+      this._subscribers = this._subscribers.filter((sub) =>
+        sub !== newSubscriber
+      );
 
       // If there are no more subscribers, reset the last value
       // we avoid the last value being emitted to a new subscriber
-      if (clear && this._subscribers.size === 0) {
+      if (clear && this._subscribers.length === 0) {
         this._lastValue = undefined;
       }
     };
 
     // Make sure we are not subscribing more than once with the same subscriber
-    // if (
-    //   this._subscribers.find((sub) =>
-    //     sub === newSubscriber || sub.next === subscriber
-    //   )
-    // ) {
-    //   return { unsubscribe };
-    // }
+    if ( this._subscribers.find((sub) => sub === newSubscriber || sub.next === subscriber ) ) {
+      return { unsubscribe };
+    }
 
     // Add the new subscriber to the list
-    this._subscribers.add(newSubscriber);
+    this._subscribers.push(newSubscriber);
 
     // If there is a pending value emits this value to the new subscriber
     if (this._lastValue !== undefined && run) {
@@ -124,7 +122,7 @@ export class Subject<T> implements Observable<T> {
   complete() {
     this._subscribers
       .forEach((subscriber) => subscriber.complete?.());
-    this._subscribers = new Set();
+    this._subscribers = [];
     this._isCompleted = true;
   }
 
@@ -134,7 +132,7 @@ export class Subject<T> implements Observable<T> {
    */
   error(e: Error) {
     this._currentError = e;
-    [...this._subscribers].reduceRight(
+    this._subscribers.reduceRight(
       (_: void, observer) => observer.error?.(e),
       undefined,
     );

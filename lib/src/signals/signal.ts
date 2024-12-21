@@ -1,5 +1,5 @@
-import { Subject } from "@micurs/rp-lib";
-import type { Observable, Effect } from "@micurs/rp-lib";
+import { Subject } from "../index.ts";
+import type { Observable, Effect } from "../types.ts";
 
 /**
  * A Signal instance represents the capability to read a dynamically

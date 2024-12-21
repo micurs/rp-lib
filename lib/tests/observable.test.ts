@@ -78,7 +78,7 @@ Deno.test("Creates an observable and ensure unsubscribe remove the subscriber co
 
 Deno.test("Subscribing twice won't subscribe 2 times the same function", () => {
   const sub = spy();
-  const obs$ = new Subject();
+  const obs$ = new Subject<number>();
   obs$.subscribe(sub);
   obs$.subscribe(sub);
   obs$.emit(100);

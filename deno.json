@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "tasks": {
-    "bundle": "deno run --allow-all npm:vite build --config vite.config.ts",
+    "bundle": "cd lib && deno run --allow-all npm:vite build --config vite.config.ts",
     "test": "deno test --coverage && deno coverage",
     "cli-demo": "deno run cli-demo/main.ts",
     "react-demo": "deno run --allow-net --allow-read jsr:@std/http@1/file-server react-demo/dist/"
