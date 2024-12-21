@@ -1,5 +1,5 @@
 import { Subject } from "../index.ts";
-import type { Observable, Effect } from "../types.ts";
+import type { Observable, Effect, Subscription } from "../index.ts";
 
 /**
  * A Signal instance represents the capability to read a dynamically
@@ -12,7 +12,12 @@ import type { Observable, Effect } from "../types.ts";
 export class Signal<T> {
   private _observable$: Observable<T>;
   private static _effects: Set<Effect> = new Set();
-  private static _effectedObservables$: Set<Observable<unknown>> = new Set();
+
+  // Used to keep track of the observables that may trigger each effect
+  private static _effectedObservables$: Map<Effect, Set<Observable<unknown>>> = new Map();
+
+  // Used to keep track of the subscriptions for each active effect
+  private static _subscriptions: Map<Effect, Array<Subscription>> = new Map();
 
   constructor(value: T) {
     this._observable$ = new Subject(value);
@@ -26,30 +31,54 @@ export class Signal<T> {
     this._observable$.emit(value);
   }
 
+  set value(value: T) {
+    this._observable$.emit(value);
+  }
+
   /**
-   * Get the last value emitted by the Signal
+   * Get the last value emitted by the Signal.
+   * Note: if this method is called inside an effect function,
+   * it will make sure the internal observable is subscribed to current effect.
    * @returns the last value emitted by the Signal
    */
   get value(): T | undefined {
     // If there are pending effects, subscribe to them and collect the
     // observables in a set
     Signal._effects.forEach(effect => {
-      Signal._effectedObservables$.add(this._observable$);
-      this._observable$.subscribe(effect, false);
-    });
+      // Subscribe to the signal internal observable
+      const subscription = this._observable$.subscribe(effect, false);
 
+      // Add the observable associated to this signal as a source of the effect
+      const sources = Signal._effectedObservables$.get(effect) || new Set<Observable<unknown>>();
+      Signal._effectedObservables$.set(effect,sources.add(this._observable$));
+
+      // Add the subscription to the list of subscriptions for this effect
+      const subs = [ ...(Signal._subscriptions.get(effect) || []), subscription ];
+      Signal._subscriptions.set(effect, subs);
+    });
     return this._observable$.value;
   }
+
 
   /**
    * Add an effect to the signals read in the effect function itself.
    * Note: the effect function is static as part of the Signal class.
-   * @param fn - the effect to add
+   * @param fn - the effect to add.
+   * @returns a function to make the effect inactive.
    */
   static effect(fn: () => void) {
     Signal._effects.add(fn);
     fn();
     Signal._effects.delete(fn);
+    return () => {
+      Signal._subscriptions.get(fn)?.forEach(sub => sub.unsubscribe());
+      Signal._subscriptions.delete(fn);
+    };
+  }
+
+  addEffect(effect: (value: T) => void) {
+    const sub = this._observable$.subscribe(effect);
+    return () => sub.unsubscribe(false); // Do not remove the last value.
   }
 
   /**
@@ -61,18 +90,28 @@ export class Signal<T> {
    * @returns a computed signal
    */
   static computed<O>(fn: () => O): Signal<O> {
+    // Run the function to compute the initial value and collect the observables of all
+    // the signals that are mentioned in the compute effect function.
     Signal._effects.add(fn);
     const value = fn();
-    const signals = [ ...Signal._effectedObservables$].reverse();
-    Signal._effectedObservables$.clear();
+    Signal._effects.delete(fn);
+
+    // Retrieve the observables that may trigger the effect
+    const sources = Signal._effectedObservables$.get(fn) || new Set<Observable<unknown>>();
+
+    // Create a new signal with the computed value
     const result$ = new Signal<O>(value);
-    signals.forEach(o$ => {
+
+    // Subscribe to the sources observable by running the computed function
+    // every time any of the source changes
+    sources.forEach(o$ => {
       o$.subscribe({
         next: (_) => {
           result$.emit(fn());
         },
       }, false);
     });
+
     return result$;
     }
 }
