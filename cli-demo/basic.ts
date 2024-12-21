@@ -1,4 +1,4 @@
-import { Subject } from "@rp/lib";
+import { Subject } from "@micurs/rp-lib";
 
 export const main = () => {
   console.log("Subscribing to a Subject Observable:");

@@ -16,8 +16,12 @@ export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
     result$.onSubscribe(() => {
       source$.subscribe({
         next: (value: I) => {
+          // Cancel the previous inner observable when a new value from the source observable is emitted
           innerObservable$ && innerObservable$.complete();
           innerObservable$ = mapFn(value);
+
+          // Subscribe to the inner observable and emit its values to the result observable
+          // Note: the previous inner observable has been cancelled. No new values will be emitted from it.
           innerObservable$.subscribe({
             next: (value) => result$.emit(value),
             error: (err: Error) => result$.error(err),
@@ -25,7 +29,11 @@ export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
           });
         },
         error: (err: Error) => result$.error(err),
-        complete: () => innerObservable$ === null && result$.complete(),
+        complete: () => {
+          innerObservable$ !== null
+          && innerObservable$.isCompleted
+          && result$.complete()
+        },
       });
     });
     return result$;

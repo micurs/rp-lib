@@ -15,17 +15,15 @@ export const flatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O
     result$.onSubscribe(() => {
       source$.subscribe({
         next: (value: I) => {
+          // Create a new inner observable for each value from the source observable
           const innerObservable$ = mapFn(value);
+
+          // Subscribe to the inner observable and emit its values to the result observable
+          // note: the previous inner observable is still active and will continue to emit values
           innerObservable$.subscribe({
-            next: (value) => {
-              result$.emit(value);
-            },
+            next: (value) => result$.emit(value),
             error: (err) => result$.error(err),
-            complete: () => {
-              if (source$.isCompleted) {
-                result$.complete();
-              }
-            },
+            complete: () => source$.isCompleted && result$.complete(),
           });
         },
         error: (err) => result$.error(err),

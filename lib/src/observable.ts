@@ -24,7 +24,7 @@ const isOnSubscribe = (value: unknown): value is OnSubscribe =>
  * Allows multiple subscribers and to register an emitter function to be executed on first subscription.
  */
 export class Subject<T> implements Observable<T> {
-  private _subscribers: FullSubscriber<T>[] = [];
+  private _subscribers: Array<FullSubscriber<T>> = [];
   private _lastValue: T | undefined;
   private _currentError: Error | undefined = undefined;
   private _isCompleted: boolean = false;
@@ -47,7 +47,7 @@ export class Subject<T> implements Observable<T> {
    * @param subscriber - the subscriber function or object
    * @returns a subscription object
    */
-  subscribe(subscriber: Subscriber<T>): Subscription {
+  subscribe(subscriber: Subscriber<T>, run: boolean = true): Subscription {
     if (this._isCompleted) {
       return { unsubscribe: () => {} };
     }
@@ -56,18 +56,20 @@ export class Subject<T> implements Observable<T> {
       : subscriber;
 
     // Create the unsubscribe function to return
-    const unsubscribe = () => {
+    const unsubscribe = (clear = true) => {
       this._subscribers = this._subscribers.filter((sub) =>
         sub !== newSubscriber
       );
+
+      // If there are no more subscribers, reset the last value
+      // we avoid the last value being emitted to a new subscriber
+      if (clear && this._subscribers.length === 0) {
+        this._lastValue = undefined;
+      }
     };
 
     // Make sure we are not subscribing more than once with the same subscriber
-    if (
-      this._subscribers.find((sub) =>
-        sub === newSubscriber || sub.next === subscriber
-      )
-    ) {
+    if ( this._subscribers.find((sub) => sub === newSubscriber || sub.next === subscriber ) ) {
       return { unsubscribe };
     }
 
@@ -75,7 +77,7 @@ export class Subject<T> implements Observable<T> {
     this._subscribers.push(newSubscriber);
 
     // If there is a pending value emits this value to the new subscriber
-    if (this._lastValue !== undefined) {
+    if (this._lastValue !== undefined && run) {
       newSubscriber.next(this._lastValue);
     }
 
@@ -106,6 +108,9 @@ export class Subject<T> implements Observable<T> {
    * @param value - the value to emit
    */
   emit(value: T) {
+    if (this._isCompleted) {
+      return;
+    }
     this._lastValue = value;
     this._subscribers
       .forEach((subscriber) => subscriber.next(value));
@@ -137,7 +142,7 @@ export class Subject<T> implements Observable<T> {
    * Get the last value emitted by the Observable
    * @returns the last value emitted by the Observable
    */
-  get lastValue(): T | undefined {
+  get value(): T | undefined {
     return this._lastValue;
   }
 
