@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@micurs/rp-lib@0.0.5": "0.0.5",
     "jsr:@std/assert@1": "1.0.8",
+    "jsr:@std/assert@^1.0.10": "1.0.10",
     "jsr:@std/assert@^1.0.8": "1.0.8",
     "jsr:@std/expect@*": "1.0.8",
     "jsr:@std/internal@^1.0.5": "1.0.5",
@@ -36,6 +37,12 @@
     },
     "@std/assert@1.0.8": {
       "integrity": "ebe0bd7eb488ee39686f77003992f389a06c3da1bbd8022184804852b2fa641b",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/assert@1.0.10": {
+      "integrity": "59b5cbac5bd55459a19045d95cc7c2ff787b4f8527c0dd195078ff6f9481fbb3",
       "dependencies": [
         "jsr:@std/internal"
       ]
@@ -2094,13 +2101,18 @@
       },
       "lib": {
         "dependencies": [
-          "jsr:@std/assert@1"
+          "jsr:@std/assert@^1.0.10"
         ]
       },
       "react-lib": {
         "dependencies": [
           "jsr:@micurs/rp-lib@0.0.5"
-        ]
+        ],
+        "packageJson": {
+          "dependencies": [
+            "npm:react@19"
+          ]
+        }
       },
       "react-signals": {
         "dependencies": [

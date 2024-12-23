@@ -1,10 +1,10 @@
 /// <reference lib="deno.ns" />
-import { assertSpyCalls, spy } from "jsr:@std/testing/mock";
-import { from, switchMap, Subject } from "../../src/index.ts";
-import { expect } from "jsr:@std/expect";
-import { defer } from "../utils.ts";
+import { assertSpyCalls, spy } from 'jsr:@std/testing/mock';
+import { from, Subject, switchMap } from '../../src/index.ts';
+import { expect } from 'jsr:@std/expect';
+import { defer } from '../utils.ts';
 
-Deno.test("switchMap should map and switch inner observables correctly", () => {
+Deno.test('switchMap should map and switch inner observables correctly', () => {
   const numbers$ = from(1, 2, 3);
   const mapFn = (x: number) => from(x, x ** 2, x ** 3);
   const sub = spy();
@@ -15,8 +15,8 @@ Deno.test("switchMap should map and switch inner observables correctly", () => {
   assertSpyCalls(sub, 9);
 });
 
-Deno.test("switchMap should handle an observable emitting multiple times", () => {
-  const source$ = from(1,2,3);
+Deno.test('switchMap should handle an observable emitting multiple times', () => {
+  const source$ = from(1, 2, 3);
   const mapFn = (x: number) => from(x, x + 1);
   const sub = spy();
 
@@ -27,7 +27,7 @@ Deno.test("switchMap should handle an observable emitting multiple times", () =>
   assertSpyCalls(sub, 6); // 2 emissions per number, but the previous ones are canceled
 });
 
-Deno.test("switchMap should cancel previous inner observables when a new value is emitted", async () => {
+Deno.test('switchMap should cancel previous inner observables when a new value is emitted', async () => {
   const source$ = from(1, 2, 3);
   const mapFn = (x: number) => {
     const inner$ = new Subject<number>();
@@ -47,8 +47,8 @@ Deno.test("switchMap should cancel previous inner observables when a new value i
   assertSpyCalls(sub, 2); // Only the last observable's emissions (3, 4) are received
 });
 
-Deno.test("switchMap should complete when the source observable completes", () => {
-  const source$ = from(1,2);
+Deno.test('switchMap should complete when the source observable completes', () => {
+  const source$ = from(1, 2);
   const mapFn = (x: number) => from(x, x * 2);
   const sub = spy();
 
@@ -67,11 +67,11 @@ Deno.test("switchMap should complete when the source observable completes", () =
   expect(isComplete).toBe(true);
 });
 
-Deno.test("switchMap should handle errors in the source observable", () => {
+Deno.test('switchMap should handle errors in the source observable', () => {
   const source$ = new Subject<number>();
   const mapFn = (x: number) => from(x, x * 2);
   const sub = spy();
-  const errorMessage = "Error in source observable";
+  const errorMessage = 'Error in source observable';
 
   const result$ = switchMap(mapFn)(source$);
 
@@ -90,12 +90,12 @@ Deno.test("switchMap should handle errors in the source observable", () => {
   expect(errorCaught).toBe(true);
 });
 
-Deno.test("switchMap should handle errors in the inner observable", async () => {
+Deno.test('switchMap should handle errors in the inner observable', async () => {
   const source$ = new Subject<number>();
   const mapFn = (x: number) => {
     const inner$ = new Subject<number>();
     setTimeout(() => {
-      inner$.error(new Error("Error in inner observable"));
+      inner$.error(new Error('Error in inner observable'));
     }, x * 10);
     return inner$;
   };
@@ -109,7 +109,7 @@ Deno.test("switchMap should handle errors in the inner observable", async () => 
     error: (err) => {
       errorCaught = true;
       expect(err).toBeInstanceOf(Error);
-      expect(err.message).toBe("Error in inner observable");
+      expect(err.message).toBe('Error in inner observable');
     },
   });
 

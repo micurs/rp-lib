@@ -1,7 +1,7 @@
-import { Subject, merge } from "../src/index.ts";
-import { expect } from "jsr:@std/expect";
+import { merge, Subject } from '../src/index.ts';
+import { expect } from 'jsr:@std/expect';
 
-Deno.test("merge should emit values from both observables", () => {
+Deno.test('merge should emit values from both observables', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = merge<number, number>(secondSource$)(firstSource$);
@@ -26,7 +26,7 @@ Deno.test("merge should emit values from both observables", () => {
   secondSource$.complete();
 });
 
-Deno.test("merge should complete when both observables complete", () => {
+Deno.test('merge should complete when both observables complete', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = merge<number, number>(secondSource$)(firstSource$);
@@ -45,11 +45,11 @@ Deno.test("merge should complete when both observables complete", () => {
   secondSource$.complete();
 });
 
-Deno.test("merge should handle errors in the first observable", () => {
+Deno.test('merge should handle errors in the first observable', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = merge<number, number>(secondSource$)(firstSource$);
-  const errorMessage = "Error in first observable";
+  const errorMessage = 'Error in first observable';
 
   result$.subscribe({
     next: () => {},
@@ -61,11 +61,11 @@ Deno.test("merge should handle errors in the first observable", () => {
   firstSource$.error(new Error(errorMessage));
 });
 
-Deno.test("merge should handle errors in the second observable", () => {
+Deno.test('merge should handle errors in the second observable', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = merge<number, number>(secondSource$)(firstSource$);
-  const errorMessage = "Error in second observable";
+  const errorMessage = 'Error in second observable';
 
   result$.subscribe({
     next: () => {},
@@ -77,7 +77,7 @@ Deno.test("merge should handle errors in the second observable", () => {
   secondSource$.error(new Error(errorMessage));
 });
 
-Deno.test("merge should emit values even if one observable completes early", () => {
+Deno.test('merge should emit values even if one observable completes early', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = merge<number, number>(secondSource$)(firstSource$);
@@ -101,7 +101,7 @@ Deno.test("merge should emit values even if one observable completes early", () 
   secondSource$.complete();
 });
 
-Deno.test("merge should emit values if the first observable completes after the second", () => {
+Deno.test('merge should emit values if the first observable completes after the second', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = merge<number, number>(secondSource$)(firstSource$);

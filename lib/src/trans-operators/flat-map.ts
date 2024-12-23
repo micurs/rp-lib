@@ -1,5 +1,5 @@
-import type { Observable, Operator } from "../index.ts";
-import { Subject } from "../index.ts";
+import type { Observable, Operator } from '../index.ts';
+import { Subject } from '../index.ts';
 
 /**
  * A flatMap (also called mergeMap) operator applies a transformation function producing observables

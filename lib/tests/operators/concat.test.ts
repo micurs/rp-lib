@@ -1,10 +1,9 @@
 /// <reference lib="deno.ns" />
 
-import { expect } from "jsr:@std/expect";
-import { Subject, concat } from "../../src/index.ts";
+import { expect } from 'jsr:@std/expect';
+import { concat, Subject } from '../../src/index.ts';
 
-
-Deno.test("should emit all values from the first observable before the second", () => {
+Deno.test('should emit all values from the first observable before the second', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = concat<number, number>(secondSource$)(firstSource$);
@@ -28,7 +27,7 @@ Deno.test("should emit all values from the first observable before the second", 
   secondSource$.complete();
 });
 
-Deno.test("should emit all values from the second observable before the first", () => {
+Deno.test('should emit all values from the second observable before the first', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = concat<number, number>(secondSource$)(firstSource$);
@@ -52,11 +51,11 @@ Deno.test("should emit all values from the second observable before the first", 
   firstSource$.complete();
 });
 
-Deno.test("should handle errors in the first observable", () => {
+Deno.test('should handle errors in the first observable', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = concat<number, number>(secondSource$)(firstSource$);
-  const errorMessage = "Error in first observable";
+  const errorMessage = 'Error in first observable';
 
   result$.subscribe({
     next: () => {},
@@ -68,11 +67,11 @@ Deno.test("should handle errors in the first observable", () => {
   firstSource$.error(new Error(errorMessage));
 });
 
-Deno.test("should handle errors in the second observable", () => {
+Deno.test('should handle errors in the second observable', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = concat<number, number>(secondSource$)(firstSource$);
-  const errorMessage = "Error in second observable";
+  const errorMessage = 'Error in second observable';
 
   result$.subscribe({
     next: () => {},
@@ -85,7 +84,7 @@ Deno.test("should handle errors in the second observable", () => {
   secondSource$.error(new Error(errorMessage));
 });
 
-Deno.test("should complete when both observables complete", () => {
+Deno.test('should complete when both observables complete', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = concat<number, number>(secondSource$)(firstSource$);
@@ -103,7 +102,7 @@ Deno.test("should complete when both observables complete", () => {
   secondSource$.complete();
 });
 
-Deno.test("should emit values from the second observable even if the first observable emits nothing", () => {
+Deno.test('should emit values from the second observable even if the first observable emits nothing', () => {
   const firstSource$ = new Subject<number>();
   const secondSource$ = new Subject<number>();
   const result$ = concat<number, number>(secondSource$)(firstSource$);

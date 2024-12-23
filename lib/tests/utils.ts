@@ -8,4 +8,3 @@ export const defer = (tm = 0): Promise<void> => {
     setTimeout(() => resolve(), tm);
   });
 };
-

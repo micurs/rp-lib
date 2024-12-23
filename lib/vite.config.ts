@@ -2,7 +2,7 @@ import { defineConfig, type Plugin } from 'vite';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
-  plugins:[
+  plugins: [
     dts({
       include: 'src',
       insertTypesEntry: true,
@@ -15,14 +15,14 @@ export default defineConfig({
     reportCompressedSize: true,
     lib: {
       entry: './src/index.ts',
-      formats: ['es']
+      formats: ['es'],
     },
     rollupOptions: {
       output: {
         compact: true,
         dir: 'dist',
         entryFileNames: 'index.js',
-      }
+      },
     },
-  }
+  },
 });

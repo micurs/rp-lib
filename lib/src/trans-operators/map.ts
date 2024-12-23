@@ -1,5 +1,5 @@
-import type { Observable, Operator } from "../index.ts";
-import { Subject } from "../index.ts";
+import type { Observable, Operator } from '../index.ts';
+import { Subject } from '../index.ts';
 
 /**
  * A map operator that applies a transformation function to each value emitted by the source observable.

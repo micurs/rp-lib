@@ -1,5 +1,5 @@
-import { Subject } from "../index.ts";
-import type { Effect, Observable, Subscription } from "../index.ts";
+import { Subject } from '../index.ts';
+import type { Effect, Observable, Subscription } from '../index.ts';
 
 /**
  * A Signal instance represents the capability to read a dynamically
@@ -14,8 +14,7 @@ export class Signal<T> {
   private static _effects: Set<Effect> = new Set();
 
   // Used to keep track of the observables that may trigger each effect
-  private static _effectedObservables$: Map<Effect, Set<Observable<unknown>>> =
-    new Map();
+  private static _effectedObservables$: Map<Effect, Set<Observable<unknown>>> = new Map();
 
   // Used to keep track of the subscriptions for each active effect
   private static _subscriptions: Map<Effect, Array<Subscription>> = new Map();

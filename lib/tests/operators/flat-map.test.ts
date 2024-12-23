@@ -1,18 +1,11 @@
 /// <reference lib="deno.ns" />
 
-import { assertSpyCallArg, assertSpyCalls, spy } from "jsr:@std/testing/mock";
+import { assertSpyCallArg, assertSpyCalls, spy } from 'jsr:@std/testing/mock';
 
-import {
-  flatMap,
-  from,
-  fromAsyncGenerator,
-  fromPromise,
-  interval,
-  map,
-} from "../../src/index.ts";
-import { defer } from "../utils.ts";
+import { flatMap, from, fromAsyncGenerator, fromPromise, interval, map } from '../../src/index.ts';
+import { defer } from '../utils.ts';
 
-Deno.test("Operator flatMap flattens the result of a mapped observable", async () => {
+Deno.test('Operator flatMap flattens the result of a mapped observable', async () => {
   // A generator that emits 3 values after 5, 10 and 15 ms
   const generator = async function* () {
     yield await defer(0).then(() => 1);
@@ -41,11 +34,11 @@ Deno.test("Operator flatMap flattens the result of a mapped observable", async (
   assertSpyCallArg(next, 2, 0, 4);
 });
 
-Deno.test("Operator flatMap - emit values combining source and mapped observable", async () => {
-  const letters$ = from("a", "b", "c");
+Deno.test('Operator flatMap - emit values combining source and mapped observable', async () => {
+  const letters$ = from('a', 'b', 'c');
   const flatMapFn = (x: string) =>
     map((i: number) => x + i)(
-      interval(10, "onSubscribe", 2),
+      interval(10, 'onSubscribe', 2),
     );
   const result$ = flatMap(flatMapFn)(letters$);
   const next = spy();
@@ -54,10 +47,10 @@ Deno.test("Operator flatMap - emit values combining source and mapped observable
   await defer(100);
   assertSpyCalls(next, 6);
   assertSpyCalls(complete, 1);
-  assertSpyCallArg(next, 0, 0, "a0");
-  assertSpyCallArg(next, 1, 0, "b0");
-  assertSpyCallArg(next, 2, 0, "c0");
-  assertSpyCallArg(next, 3, 0, "a1");
-  assertSpyCallArg(next, 4, 0, "b1");
-  assertSpyCallArg(next, 5, 0, "c1");
+  assertSpyCallArg(next, 0, 0, 'a0');
+  assertSpyCallArg(next, 1, 0, 'b0');
+  assertSpyCallArg(next, 2, 0, 'c0');
+  assertSpyCallArg(next, 3, 0, 'a1');
+  assertSpyCallArg(next, 4, 0, 'b1');
+  assertSpyCallArg(next, 5, 0, 'c1');
 });
