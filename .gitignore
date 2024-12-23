@@ -11,12 +11,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 */obsolete/*
+obsolete/*
 
 node_modules
 dist
 dist-ssr
 *.local
 coverage
+.vite
 
 # Editor directories and files
 .vscode/*

@@ -7,17 +7,10 @@
   },
   "imports": {
     "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.10",
-    "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.0",
-    "@types/react": "npm:@types/react@^18.3.11",
-    "@types/react-dom": "npm:@types/react-dom@^18.3.1",
-    "@vitejs/plugin-react-swc": "npm:@vitejs/plugin-react-swc@^3.7.1",
     "autoprefixer": "npm:autoprefixer@^10.4.16",
     "daisyui": "npm:daisyui@^4.4.20",
     "postcss": "npm:postcss@^8.4.32",
     "postcss-import": "npm:postcss-import@^14.0.0",
-    "tailwindcss": "npm:tailwindcss@^3.3.6",
-    "react": "npm:react@^18.3.1",
-    "react-dom": "npm:react-dom@^18.3.1",
-    "vite": "npm:vite@^5.4.9"
+    "tailwindcss": "npm:tailwindcss@^3.3.6"
   }
 }

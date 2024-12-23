@@ -1,26 +1,12 @@
 import './App.css';
-import React from 'react';
-import { Signal } from '@micurs/rp-lib';
+// import * as React from 'react';
+// import type { Signal } from '@micurs/rp-lib';
+import { useSignal } from '@micurs/react-rp-lib';
 
 import { TicketList } from './components/ticket-list.tsx';
 import { tickets$ } from './state-by-signals.ts';
 
 const ticketListState = 'flex-1 min-w-fit max-w-lg w-1/3 border-r-[1px] border-slate-600 flex flex-col items-center align-top';
-
-/**
- * Simple custom hook that can be used to integrate react with rp-lib Signal class.
- * @param signal$ - The signal to subscribe to.
- * @param def - The default value to return if the signal has not yet emitted a value.
- * @returns a value as emitted by the signal or the default value if the signal has not yet emitted a value.
- */
-function useSignal<M>(signal$: Signal<M>, def: NonNullable<M>) {
-  const [, setState] = React.useState({});
-  React.useEffect(() => {
-    const clearEffect = signal$.addEffect(() => setState({}));
-    return () => clearEffect();
-  }, [signal$]);
-  return signal$.value ?? def;
-}
 
 function App() {
   const tickets = useSignal(tickets$, []);

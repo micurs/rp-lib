@@ -8,9 +8,6 @@
     "include": [
       "readme.md",
       "src/**/*"
-    ],
-    "exclude": [
-      "src/signals"
     ]
   },
   "tasks": {
