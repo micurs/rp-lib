@@ -3,7 +3,7 @@
     "dev": "deno run -A --node-modules-dir npm:vite",
     "build": "deno run -A --node-modules-dir npm:vite build",
     "preview": "deno run -A --node-modules-dir npm:vite preview",
-    "serve": "deno run --allow-net --allow-read jsr:@std/http@1/file-server dist --port 8080 --verbose"
+    "serve": "deno run --allow-net --allow-read jsr:@std/http/file-server dist --port 8080 --verbose"
   },
   "imports": {
     "@tailwindcss/typography": "npm:@tailwindcss/typography@^0.5.10",

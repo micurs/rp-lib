@@ -1,5 +1,5 @@
 import { Subject } from "../index.ts";
-import type { Observable, Effect, Subscription } from "../index.ts";
+import type { Effect, Observable, Subscription } from "../index.ts";
 
 /**
  * A Signal instance represents the capability to read a dynamically
@@ -14,7 +14,8 @@ export class Signal<T> {
   private static _effects: Set<Effect> = new Set();
 
   // Used to keep track of the observables that may trigger each effect
-  private static _effectedObservables$: Map<Effect, Set<Observable<unknown>>> = new Map();
+  private static _effectedObservables$: Map<Effect, Set<Observable<unknown>>> =
+    new Map();
 
   // Used to keep track of the subscriptions for each active effect
   private static _subscriptions: Map<Effect, Array<Subscription>> = new Map();
@@ -44,21 +45,21 @@ export class Signal<T> {
   get value(): T | undefined {
     // If there are pending effects, subscribe to them and collect the
     // observables in a set
-    Signal._effects.forEach(effect => {
+    Signal._effects.forEach((effect) => {
       // Subscribe to the signal internal observable
       const subscription = this._observable$.subscribe(effect, false);
 
       // Add the observable associated to this signal as a source of the effect
-      const sources = Signal._effectedObservables$.get(effect) || new Set<Observable<unknown>>();
-      Signal._effectedObservables$.set(effect,sources.add(this._observable$));
+      const sources = Signal._effectedObservables$.get(effect) ||
+        new Set<Observable<unknown>>();
+      Signal._effectedObservables$.set(effect, sources.add(this._observable$));
 
       // Add the subscription to the list of subscriptions for this effect
-      const subs = [ ...(Signal._subscriptions.get(effect) || []), subscription ];
+      const subs = [...(Signal._subscriptions.get(effect) || []), subscription];
       Signal._subscriptions.set(effect, subs);
     });
     return this._observable$.value;
   }
-
 
   /**
    * Add an effect to the signals read in the effect function itself.
@@ -66,17 +67,22 @@ export class Signal<T> {
    * @param fn - the effect to add.
    * @returns a function to make the effect inactive.
    */
-  static effect(fn: () => void) {
+  static effect(fn: () => void): () => void {
     Signal._effects.add(fn);
     fn();
     Signal._effects.delete(fn);
     return () => {
-      Signal._subscriptions.get(fn)?.forEach(sub => sub.unsubscribe());
+      Signal._subscriptions.get(fn)?.forEach((sub) => sub.unsubscribe());
       Signal._subscriptions.delete(fn);
     };
   }
 
-  addEffect(effect: (value: T) => void) {
+  /**
+   * Add an explicit effect to the Signal.
+   * @param effect - a simple function that will receive the value of the signal
+   * @returns a function to remove the effect
+   */
+  addEffect(effect: (value: T) => void): () => void {
     const sub = this._observable$.subscribe(effect);
     return () => sub.unsubscribe(false); // Do not remove the last value.
   }
@@ -97,14 +103,15 @@ export class Signal<T> {
     Signal._effects.delete(fn);
 
     // Retrieve the observables that may trigger the effect
-    const sources = Signal._effectedObservables$.get(fn) || new Set<Observable<unknown>>();
+    const sources = Signal._effectedObservables$.get(fn) ||
+      new Set<Observable<unknown>>();
 
     // Create a new signal with the computed value
     const result$ = new Signal<O>(value);
 
     // Subscribe to the sources observable by running the computed function
     // every time any of the source changes
-    sources.forEach(o$ => {
+    sources.forEach((o$) => {
       o$.subscribe({
         next: (_) => {
           result$.emit(fn());
@@ -113,7 +120,5 @@ export class Signal<T> {
     });
 
     return result$;
-    }
+  }
 }
-
-

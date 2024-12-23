@@ -2,10 +2,11 @@
   "version": "0.1.0",
   "license": "MIT",
   "tasks": {
-    "bundle": "cd lib && deno run bundle && cd ../react-lib && deno run bundle",
+    "bundle": "deno task --config lib/deno.json bundle && deno task --config react-lib/deno.json bundle",
     "test": "deno test --coverage && deno coverage",
     "cli-demo": "deno run cli-demo/main.ts",
-    "react-demo": "deno run --allow-net --allow-read jsr:@std/http@1/file-server react-demo/dist/"
+    "react-signals-dev": "deno task --config react-signals/deno.json dev",
+    "react-signals": "deno task --config react-signals/deno.json serve"
   },
   "compilerOptions": {
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
