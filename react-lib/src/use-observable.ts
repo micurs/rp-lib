@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Observable } from "@micurs/rp-lib";
+import type { Observable } from "jsr:@micurs/rp-lib";
 
 /**
  * A simple hook that subscribes to an observable and returns its current value.
