@@ -17,7 +17,8 @@ export default defineConfig({
   plugins: [deno(), react()],
   resolve: {
     alias: {
-      "@micurs/rp-lib": "../lib/dist/index.js"
+      "@micurs/rp-lib": "../lib/dist/index.js",
+      "@micurs/react-rp-lib": "../react-lib/dist/index.js"
     }
   }
 })

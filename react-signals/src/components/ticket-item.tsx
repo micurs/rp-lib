@@ -14,8 +14,9 @@ const ticketClass = (active: boolean) =>
   active ? `${basteTicketClass} bg-slate-400 shadow-lg shadow-black` : `${basteTicketClass} bg-slate-500`;
 
 export const TicketItem = ({ ticket }: TicketItemProps) => {
-  const handleTransition = (step: number) => {
+  const handleTransition = (e: React.MouseEvent, step: number) => {
     transitionTo(ticket.id, getStatus(ticket.status, step));
+    e.stopPropagation();
   };
 
   const handleActiveToggle = (e: React.MouseEvent) => {
@@ -37,13 +38,13 @@ export const TicketItem = ({ ticket }: TicketItemProps) => {
         <div className='card-actions justify-end'>
           <button
             className='btn btn-circle btn-accent'
-            onClick={() => handleTransition(-1)}
+            onClick={(e) => handleTransition(e, -1)}
           >
             &laquo;
           </button>
           <button
             className='btn btn-circle btn-accent'
-            onClick={() => handleTransition(+1)}
+            onClick={(e) => handleTransition(e, +1)}
           >
             &raquo;
           </button>

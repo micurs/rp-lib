@@ -10,9 +10,14 @@ export const tickets$: Signal<Ticket[]> = new Signal(initialState.tickets);
  * @param newStatus - the new status of the ticket
  */
 export const transitionTo = (ticketId: number, newStatus: Status) => {
-  tickets$.value = tickets$.value!.map((ticket) => {
-    return ticket.id === ticketId ? { ...ticket, status: newStatus } : ticket;
-  });
+  const ticketMoving = tickets$.value!.find((ticket) => ticket.id === ticketId);
+  if (ticketMoving) {
+    // We move the ticket to the new status and put it at the end of the array
+    tickets$.value = [
+      ...tickets$.value!.filter((ticket) => ticket.id!== ticketId),
+      { ...ticketMoving, status: newStatus }
+    ]
+  }
 };
 
 export const setActive = (ticketId: number | null) => {

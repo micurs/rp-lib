@@ -1,15 +1,18 @@
 {
-  "deno.future": true,
+  "deno.enable": true,
   "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "modifications",
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.formatOnSaveMode": "file",
   "code-runner.executorMap": {
     "typescript": "deno run"
   },
-  "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#1d1f90",
+    "titleBar.activeBackground": "#0e156d",
+    "titleBar.activeForeground": "#eae4a4",
+    "activityBar.activeBackground": "#0e156d",
+    "activityBar.activeBorder": "#e6d627",
+    "activityBar.foreground": "#e6d627",
+    "activityBar.inactiveForeground": "#a59e53",
   },
-  "[json]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
-  },
-  "deno.enable": true
 }

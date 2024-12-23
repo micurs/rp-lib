@@ -1,5 +1,5 @@
-import { defineConfig } from 'npm:vite';
-import dts from 'npm:vite-plugin-dts';
+import { defineConfig, type Plugin } from 'vite';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins:[
@@ -7,7 +7,7 @@ export default defineConfig({
       include: 'src',
       insertTypesEntry: true,
       rollupTypes: true,
-    }),
+    }) as Plugin,
   ],
   build: {
     minify: 'esbuild',
