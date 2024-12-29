@@ -10,6 +10,7 @@ export * from './trans-operators/switch-map.ts';
 export * from './trans-operators/concat-map.ts';
 export * from './filter-operators/filter.ts';
 export * from './filter-operators/debounce.ts';
+export * from './filter-operators/throttle.ts';
 export * from './compose-pipe.ts';
 export * from './signals/signal.ts';
 
