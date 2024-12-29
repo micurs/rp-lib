@@ -4,6 +4,7 @@
   "tasks": {
     "bundle": "deno task --config lib/deno.json bundle && deno task --config react-lib/deno.json bundle",
     "test": "deno test --coverage && deno coverage",
+    "coverage": "deno test --coverage && deno coverage --html coverage && open coverage/html/index.html",
     "cli-demo": "deno run cli-demo/main.ts",
     "react-signals-dev": "deno task --config react-signals/deno.json dev",
     "react-signals": "deno task --config react-signals/deno.json serve"
@@ -29,7 +30,6 @@
         "no-case-declarations",
         "no-class-assign",
         "no-debugger",
-        "rules-of-hooks",
         "valid-typeof"
       ]
     }
