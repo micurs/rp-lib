@@ -14,11 +14,10 @@ export const concatMap =
     const result$ = new Subject<O>();
     // the inner accumulator is the observable that will be concatenated
     let innerAccumulator$: Observable<O> | undefined = undefined;
-    // the previous subscription to the inner accumulator
+    // the previous subscription to the inner accumulator (we use it to unsubscribe)
     let prevSubscription: Subscription | undefined;
     source$.subscribe({
       next: (value: I) => {
-        // console.log('source emitted', value);
         // unsubscribe from the previous inner accumulator
         if (prevSubscription) {
           prevSubscription.unsubscribe();
@@ -33,11 +32,17 @@ export const concatMap =
         prevSubscription = innerAccumulator$.subscribe({
           next: (value: O) => result$.emit(value),
           error: (err: Error) => result$.error(err),
-          complete: () => source$.isCompleted && result$.complete(),
+          complete: () => {
+            source$.isCompleted && result$.complete();
+          },
         });
       },
       error: (err: Error) => result$.error(err),
-      // complete: () => result$.complete(),
+      complete: () => {
+        if (innerAccumulator$ && innerAccumulator$.isCompleted) {
+          result$.complete();
+        }
+      },
     });
     return result$;
   };

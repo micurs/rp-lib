@@ -77,8 +77,9 @@ export const fromTimer = <T>(
   start: 'onSubscribe' | 'now' = 'onSubscribe',
 ): Observable<T> => {
   const arrayObs$ = new Subject<T>();
-  let idx = 0;
+  let idx = 1;
   const emitter = () => {
+    arrayObs$.emit(values[0]);
     const timer = setInterval(() => {
       if (idx < values.length) {
         arrayObs$.emit(values[idx]);

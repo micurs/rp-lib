@@ -39,9 +39,7 @@ export const concat =
         // Now we emit all cached values from the second observable
         secondSourceCache.forEach((value: I2) => result$.emit(value));
         // If the second observable has completed, we complete the result observable
-        if (secondSource$.isCompleted) {
-          result$.complete();
-        }
+        secondSource$.isCompleted && result$.complete();
       },
     });
     return result$;
