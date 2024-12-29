@@ -1,4 +1,4 @@
-import type { Observable } from './index.ts';
+import type { EmitterFunction, Observable } from './index.ts';
 import { Subject } from './index.ts';
 // import { EventEmitter } from "node:events";
 
@@ -65,30 +65,55 @@ export const range = (start: number, count: number): Observable<number> => {
 //   return eventObs$;
 // };
 
+const isEmitterFunction = <T>(fn: unknown): fn is EmitterFunction<T> => typeof fn === 'function';
+
 /**
  * Creates an Observable that will emit with a given delay a set of values.
  * @param delayMs - an interval in millisecond used to emit values.
- * @param values - the array of values to emit through the created Observable
+ * @param values - the array of values to emit through the created Observable or an emitter function that
+ * generates the values.
  * @returns an Observable
  */
 export const fromTimer = <T>(
   delayMs: number,
-  values: T[],
+  values: T[] | EmitterFunction<T>,
   start: 'onSubscribe' | 'now' = 'onSubscribe',
 ): Observable<T> => {
   const arrayObs$ = new Subject<T>();
-  let idx = 0;
-  const emitter = () => {
-    const timer = setInterval(() => {
-      if (idx < values.length) {
+  let idx = 1;
+  const emitter = isEmitterFunction(values)
+    // Values are generated from an emitter function
+    ? () => {
+      const firstValue = values(0);
+      if (firstValue === null) {
+        arrayObs$.complete();
+        return;
+      }
+      arrayObs$.emit(firstValue);
+      const timer = setInterval(() => {
+        const value = values(idx);
+        if (value === null) {
+          clearInterval(timer);
+          arrayObs$.complete();
+          return;
+        }
+        arrayObs$.emit(value);
+        idx++;
+      }, delayMs);
+    }
+    // Values is generated from an array
+    : () => {
+      const firstValue = values[0];
+      arrayObs$.emit(firstValue);
+      const timer = setInterval(() => {
+        if (idx >= values.length) {
+          clearInterval(timer);
+          arrayObs$.complete();
+        }
         arrayObs$.emit(values[idx]);
         idx++;
-      } else {
-        clearInterval(timer);
-        arrayObs$.complete();
-      }
-    }, delayMs);
-  };
+      }, delayMs);
+    };
 
   if (start === 'onSubscribe') {
     arrayObs$.onSubscribe(emitter);

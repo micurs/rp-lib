@@ -1,5 +1,5 @@
 /// <reference lib="deno.ns" />
-
+import { expect } from 'jsr:@std/expect';
 import { assertSpyCallArg, assertSpyCalls, spy } from 'jsr:@std/testing/mock';
 // import { EventEmitter } from 'node:events';
 import {
@@ -41,16 +41,17 @@ Deno.test('Operator from creates an Observable emitting NO values', () => {
   assertSpyCalls(sub, 0);
 });
 
-Deno.test('Operator fromTimer creates an Observable emitting 1 value after 10ms', async () => {
+Deno.test('Operator fromTimer creates an Observable emitting 1 value right away and one after 10ms', async () => {
   const sub = spy();
   const complete = spy();
-  const obs$ = fromTimer(5, [1], 'onSubscribe');
+  const obs$ = fromTimer(5, [1, 2], 'onSubscribe');
   obs$.subscribe({
     next: sub,
     complete,
   });
-  await defer(20);
   assertSpyCalls(sub, 1);
+  await defer(20);
+  assertSpyCalls(sub, 2);
   assertSpyCalls(complete, 1);
 });
 
@@ -125,6 +126,23 @@ Deno.test('Operator range creates an Observable emitting a sequence of numbers',
   assertSpyCallArg(sub, 0, 0, 1);
   assertSpyCallArg(sub, 1, 0, 2);
   assertSpyCallArg(sub, 2, 0, 3);
+});
+
+Deno.test('Use an EmitterFunction to generate values for an Observable', async () => {
+  const obs$ = fromTimer(10, (idx) => {
+    if (idx < 3) {
+      return idx;
+    }
+    return null;
+  });
+  const res: Array<number> = [];
+  obs$.subscribe({
+    next: (v) => res.push(v),
+    complete: () => {
+      expect(res).toEqual([0, 1, 2]);
+    },
+  });
+  await defer(50);
 });
 
 // Deno.test("Operator fromEvent creates an Observable emitting events", () => {

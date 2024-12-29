@@ -11,6 +11,7 @@ import { Subject } from '../index.ts';
 export const throttle = <T>(time: number): Operator<T, T> => {
   return <T>(source$: Observable<T>): Observable<T> => {
     const result$ = new Subject<T>();
+    let lastSourceValue: T | undefined = undefined;
     let lastEmissionTime: number | undefined = undefined;
     source$.subscribe({
       next: (val: T) => {
@@ -23,10 +24,22 @@ export const throttle = <T>(time: number): Operator<T, T> => {
         if (deltaTime >= time) {
           result$.emit(val);
           lastEmissionTime = Date.now();
+          lastSourceValue = undefined;
+        } else {
+          lastSourceValue = val;
         }
       },
       error: (err: Error) => result$.error(err),
-      complete: () => result$.complete(),
+      complete: () => {
+        if (lastSourceValue !== undefined) {
+          setTimeout(() => {
+            result$.emit(lastSourceValue!);
+            result$.complete();
+          }, time - (Date.now() - lastEmissionTime!));
+          return;
+        }
+        result$.complete();
+      },
     });
     return result$;
   };
