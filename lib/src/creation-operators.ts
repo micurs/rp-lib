@@ -1,8 +1,6 @@
-import type { Observable } from "./index.ts";
-import { Subject } from "./index.ts";
+import type { Observable } from './index.ts';
+import { Subject } from './index.ts';
 // import { EventEmitter } from "node:events";
-
-
 
 /**
  * Creates a Observable that will emit a sequence of values from the given array.
@@ -25,11 +23,8 @@ export const fromArray = <T>(values: T[]): Observable<T> => {
  * @returns an Observable
  */
 export const from = <T>(...values: T[]): Observable<T> => {
-  const valueArray = values.slice();
   const fromObservable$ = new Subject<T>(() => {
-    for (const val of valueArray) {
-      fromObservable$.emit(val);
-    }
+    values.forEach((val) => fromObservable$.emit(val));
     fromObservable$.complete();
   });
   return fromObservable$;
@@ -43,8 +38,8 @@ export const from = <T>(...values: T[]): Observable<T> => {
  */
 export const range = (start: number, count: number): Observable<number> => {
   const range$ = new Subject<number>(() => {
-    for (let i = 0; i < count; i++) {
-      range$.emit(start + i);
+    for (let i = start; i < start + count; i++) {
+      range$.emit(i);
     }
     range$.complete();
   });
@@ -79,7 +74,7 @@ export const range = (start: number, count: number): Observable<number> => {
 export const fromTimer = <T>(
   delayMs: number,
   values: T[],
-  start: "onSubscribe" | "now" = "onSubscribe",
+  start: 'onSubscribe' | 'now' = 'onSubscribe',
 ): Observable<T> => {
   const arrayObs$ = new Subject<T>();
   let idx = 0;
@@ -95,7 +90,7 @@ export const fromTimer = <T>(
     }, delayMs);
   };
 
-  if (start === "onSubscribe") {
+  if (start === 'onSubscribe') {
     arrayObs$.onSubscribe(emitter);
   } else {
     emitter();
@@ -105,19 +100,20 @@ export const fromTimer = <T>(
 
 /**
  * Creates an Observable that will emit a sequence of numbers with a given delay.
+ * The sequence will start from 0 and will continue for a count number of values.
+ * The emission of values will start on first subscription or immediately.
  * @param delayMs - an interval in millisecond used to emit values.
- * @param start - when to start the interval, 'onSubscribe' to start the interval once the observable is subscribed to, 'now' to start the interval immediately
  * @param count - the max number of values to emit
  * @returns an Observable emitting a sequence of numbers
  */
 export const interval = (
   delayMs: number,
-  start: "onSubscribe" | "now" = "onSubscribe",
+  start: 'onSubscribe' | 'now' = 'onSubscribe',
   count = Infinity,
 ): Observable<number> => {
   const interval$ = new Subject<number>();
-  let idx = 0;
   const emitter = () => {
+    let idx = 0;
     const timer = setInterval(() => {
       if (idx >= count) {
         clearInterval(timer);
@@ -129,7 +125,7 @@ export const interval = (
     }, delayMs);
   };
 
-  if (start === "onSubscribe") {
+  if (start === 'onSubscribe') {
     interval$.onSubscribe(emitter);
   } else {
     emitter();
@@ -160,7 +156,7 @@ export const fromPromise = <T>(promise: Promise<T>): Subject<T> => {
  */
 export const fromGenerator = <T>(
   generator: Generator<T>,
-  start: "onSubscribe" | "now" = "onSubscribe",
+  start: 'onSubscribe' | 'now' = 'onSubscribe',
 ): Observable<T> => {
   const generatorObs$ = new Subject<T>();
   const emitter = () => {
@@ -170,7 +166,7 @@ export const fromGenerator = <T>(
     generatorObs$.complete();
   };
 
-  if (start === "onSubscribe") {
+  if (start === 'onSubscribe') {
     generatorObs$.onSubscribe(emitter);
   } else {
     emitter();
@@ -186,7 +182,7 @@ export const fromGenerator = <T>(
  */
 export const fromAsyncGenerator = <T>(
   generator: AsyncGenerator<T>,
-  start: "onSubscribe" | "now" = "onSubscribe",
+  start: 'onSubscribe' | 'now' = 'onSubscribe',
 ): Observable<T> => {
   const generatorObs$ = new Subject<T>();
   const emitter = async () => {
@@ -195,7 +191,7 @@ export const fromAsyncGenerator = <T>(
     }
     await generatorObs$.complete();
   };
-  if (start === "onSubscribe") {
+  if (start === 'onSubscribe') {
     generatorObs$.onSubscribe(emitter);
   } else {
     void emitter();

@@ -1,9 +1,4 @@
-import type {
-  FullSubscriber,
-  Observable,
-  Subscriber,
-  Subscription,
-} from "./types.ts";
+import type { FullSubscriber, Observable, Subscriber, Subscription } from './types.ts';
 
 /**
  * The type of the function that is executed on first subscription
@@ -16,8 +11,7 @@ type OnSubscribe = () => void;
  * @param value - the value to check
  * @returns true if the value is an OnSubscribe function, false otherwise
  */
-const isOnSubscribe = (value: unknown): value is OnSubscribe =>
-  typeof value === "function";
+const isOnSubscribe = (value: unknown): value is OnSubscribe => typeof value === 'function';
 
 /**
  * A generic multi-cast observable class.
@@ -25,7 +19,7 @@ const isOnSubscribe = (value: unknown): value is OnSubscribe =>
  */
 export class Subject<T> implements Observable<T> {
   private _subscribers: Array<FullSubscriber<T>> = [];
-  private _lastValue: T | undefined;
+  private _lastValue: T | undefined = undefined;
   private _currentError: Error | undefined = undefined;
   private _isCompleted: boolean = false;
   private _emitter: (() => void) | null = null;
@@ -34,12 +28,12 @@ export class Subject<T> implements Observable<T> {
    * Create a new observable
    * @param emit -  the value to emit or the onSubscribe function to be executed on first subscription
    */
-  constructor(emit?: T | (() => void)) {
-    if (isOnSubscribe(emit)) {
-      this._emitter = emit;
-    } else {
-      this._lastValue = emit;
+  constructor(valueOrEmitter: T | undefined | (() => void) = undefined) {
+    if (isOnSubscribe(valueOrEmitter)) {
+      this._emitter = valueOrEmitter;
+      return;
     }
+    this._lastValue = valueOrEmitter;
   }
 
   /**
@@ -51,15 +45,13 @@ export class Subject<T> implements Observable<T> {
     if (this._isCompleted) {
       return { unsubscribe: () => {} };
     }
-    const newSubscriber: FullSubscriber<T> = (typeof subscriber === "function")
+    const newSubscriber: FullSubscriber<T> = (typeof subscriber === 'function')
       ? { next: subscriber }
       : subscriber;
 
     // Create the unsubscribe function to return
     const unsubscribe = (clear = true) => {
-      this._subscribers = this._subscribers.filter((sub) =>
-        sub !== newSubscriber
-      );
+      this._subscribers = this._subscribers.filter((sub) => sub !== newSubscriber);
 
       // If there are no more subscribers, reset the last value
       // we avoid the last value being emitted to a new subscriber
@@ -69,7 +61,7 @@ export class Subject<T> implements Observable<T> {
     };
 
     // Make sure we are not subscribing more than once with the same subscriber
-    if ( this._subscribers.find((sub) => sub === newSubscriber || sub.next === subscriber ) ) {
+    if (this._subscribers.find((sub) => sub === newSubscriber || sub.next === subscriber)) {
       return { unsubscribe };
     }
 
@@ -132,10 +124,11 @@ export class Subject<T> implements Observable<T> {
    */
   error(e: Error) {
     this._currentError = e;
-    this._subscribers.reduceRight(
-      (_: void, observer) => observer.error?.(e),
-      undefined,
-    );
+    this._subscribers
+      .reduceRight(
+        (_: void, observer) => observer.error?.(e),
+        undefined,
+      );
   }
 
   /**

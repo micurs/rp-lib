@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "module": "dist/index.js",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts"
+  "typings": "dist/index.d.ts",
+  "dependencies": {
+    "react": "^19.0.0"
+  }
 }

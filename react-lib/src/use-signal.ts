@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Signal } from "@micurs/rp-lib";
+import type { Signal } from "jsr:@micurs/rp-lib";
 
 /**
  * Simple custom hook that can be used to integrate react with rp-lib Signal class.

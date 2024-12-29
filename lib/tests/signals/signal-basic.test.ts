@@ -1,22 +1,24 @@
 /// <reference lib="deno.ns" />
 
-import { assertSpyCalls, spy } from "jsr:@std/testing/mock";
-import { expect } from "jsr:@std/expect";
+import { assertSpyCalls, spy } from 'jsr:@std/testing/mock';
+import { expect } from 'jsr:@std/expect';
 
-import { Signal } from "../../../lib/src/signals/signal.ts";
+import { Signal } from '../../../lib/src/signals/signal.ts';
 
-
-Deno.test("Creating an effect function with a signal", () => {
+Deno.test('Creating an effect function with a signal', () => {
   const signal = new Signal(100);
-  const effect = spy(() => { console.log("spy1 called", signal.value) });
+  const effect = spy(() => {
+    console.log('spy1 called', signal.value);
+  });
   Signal.effect(effect);
   assertSpyCalls(effect, 1);
 });
 
-
-Deno.test("Emitting a value on a signal calls the effect function", () => {
+Deno.test('Emitting a value on a signal calls the effect function', () => {
   const signal = new Signal(100);
-  const effect = spy(() => { console.log("spy1 called", signal.value) });
+  const effect = spy(() => {
+    console.log('spy1 called', signal.value);
+  });
   Signal.effect(effect);
   expect(signal.value).toBe(100);
   signal.value = 200;
@@ -24,9 +26,11 @@ Deno.test("Emitting a value on a signal calls the effect function", () => {
   assertSpyCalls(effect, 2);
 });
 
-Deno.test("Disabling an effect function stops it from being called", () => {
+Deno.test('Disabling an effect function stops it from being called', () => {
   const signal = new Signal(100);
-  const effect = spy(() => { console.log("spy1 called", signal.value) });
+  const effect = spy(() => {
+    console.log('spy1 called', signal.value);
+  });
   const disableEffect = Signal.effect(effect);
   disableEffect();
   signal.value = 200;
@@ -38,7 +42,9 @@ Deno.test('A computed signal effect function is called when a dependent signal c
   const signal1 = new Signal(100);
   const computedSignal = Signal.computed(() => signal1.value ? signal1.value.toFixed(2) : '');
   expect(computedSignal.value).toBe('100.00');
-  const effect = spy(() => { console.log('computed signal changed to =>', computedSignal.value) });
+  const effect = spy(() => {
+    console.log('computed signal changed to =>', computedSignal.value);
+  });
   Signal.effect(effect);
   signal1.value = 200;
   expect(computedSignal.value).toBe('200.00');
@@ -59,7 +65,6 @@ Deno.test('Two computed signals emit their computed values when their dependent 
   assertSpyCalls(effect, 3);
 });
 
-
 Deno.test('Two computed signals emit their computed values when their dependent signal changes', () => {
   const source1 = new Signal(100);
   const source2 = new Signal(300);
@@ -73,7 +78,6 @@ Deno.test('Two computed signals emit their computed values when their dependent 
   assertSpyCalls(effect, 2);
 });
 
-
 Deno.test('Two computed signals emit their computed values when their dependent signal changes', () => {
   const source1 = new Signal(0);
   const computed1 = Signal.computed(() => source1.value! + 100);
@@ -86,4 +90,4 @@ Deno.test('Two computed signals emit their computed values when their dependent 
   expect(computed1.value).toBe(1100);
   expect(computed2.value).toBe(1200);
   assertSpyCalls(effect, 2);
-})
+});

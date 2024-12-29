@@ -1,4 +1,4 @@
-import type { Observable, Operator } from "./types.ts";
+import type { Observable, Operator } from './types.ts';
 
 /**
  * Compose a series of operators into a single operator.

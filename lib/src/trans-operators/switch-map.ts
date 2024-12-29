@@ -1,5 +1,5 @@
-import type { Observable, Operator } from "../index.ts";
-import { Subject } from "../index.ts";
+import type { Observable, Operator } from '../index.ts';
+import { Subject } from '../index.ts';
 
 /**
  * A switchMap operator that applies a transformation function producing observables
@@ -30,9 +30,7 @@ export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
         },
         error: (err: Error) => result$.error(err),
         complete: () => {
-          innerObservable$ !== null
-          && innerObservable$.isCompleted
-          && result$.complete()
+          innerObservable$ !== null && innerObservable$.isCompleted && result$.complete();
         },
       });
     });

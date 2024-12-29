@@ -1,5 +1,5 @@
-import type { Observable, Operator, Subscription } from "../index.ts";
-import {  Subject, concat } from "../index.ts";
+import type { Observable, Operator, Subscription } from '../index.ts';
+import { concat, Subject } from '../index.ts';
 
 /**
  * Maps each emitted value to an observable and concatenates the results
@@ -8,7 +8,8 @@ import {  Subject, concat } from "../index.ts";
  * @param source$ - the source observable
  * @returns a new observable that emits the values from the projected observables
  */
-export const concatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O> =>
+export const concatMap =
+  <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O> =>
   (source$: Observable<I>): Observable<O> => {
     const result$ = new Subject<O>();
     // the inner accumulator is the observable that will be concatenated
@@ -26,7 +27,7 @@ export const concatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
         const mapped$ = mapFn(value);
 
         // concatenate the new observable to the inner accumulator
-        innerAccumulator$ = innerAccumulator$ ? concat<O,O>(mapped$)(innerAccumulator$) : mapped$;
+        innerAccumulator$ = innerAccumulator$ ? concat<O, O>(mapped$)(innerAccumulator$) : mapped$;
 
         // subscribe to the inner accumulator
         prevSubscription = innerAccumulator$.subscribe({
@@ -34,11 +35,9 @@ export const concatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
           error: (err: Error) => result$.error(err),
           complete: () => source$.isCompleted && result$.complete(),
         });
-
       },
       error: (err: Error) => result$.error(err),
       // complete: () => result$.complete(),
     });
     return result$;
   };
-

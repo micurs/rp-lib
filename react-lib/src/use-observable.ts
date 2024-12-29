@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import type { Observable } from "@micurs/rp-lib";
+import { useEffect, useState } from 'react';
+import type { Observable } from 'jsr:@micurs/rp-lib';
 
 /**
  * A simple hook that subscribes to an observable and returns its current value.
@@ -12,10 +12,10 @@ export const useObservable = <T>(
   observable: Observable<T>,
   initialValue: T,
 ): T => {
-  const [value, setValue] = useState(initialValue);
+  const [_, setValue] = useState(initialValue);
   useEffect(() => {
     const subscription = observable.subscribe(setValue);
     return () => subscription.unsubscribe();
   }, [observable]);
-  return value;
+  return observable.value;
 };
