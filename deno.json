@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "tasks": {
     "bundle": "deno task --config lib/deno.json bundle && deno task --config react-lib/deno.json bundle",
