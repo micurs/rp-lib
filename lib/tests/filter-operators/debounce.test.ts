@@ -1,7 +1,7 @@
 import { expect } from 'jsr:@std/expect';
 import { debounce, fromArray, fromTimer } from '../../src/index.ts';
 
-Deno.test('debounce should emit all the values with the given frequency', async () => {
+Deno.test('debounce should emit all the values with the expected max frequency', async () => {
   const expectedInterval = 10;
 
   const res: Array<[number, number]> = [];
@@ -9,7 +9,6 @@ Deno.test('debounce should emit all the values with the given frequency', async 
   const result$ = debounce<number>(10)(source$);
   const expectedValues = [1, 2, 3, 4, 5];
 
-  let lastEmissionTime = Date.now();
   result$.subscribe({
     next: (value: number) => {
       res.push([Date.now(), value]);
@@ -19,7 +18,7 @@ Deno.test('debounce should emit all the values with the given frequency', async 
       const receivedValues = res.map(([_time, value]) => value);
       expect(receivedValues).toEqual(expectedValues);
       const [firstEmission, ...otherEmissions] = res;
-      lastEmissionTime = firstEmission[0];
+      let lastEmissionTime = firstEmission[0];
       otherEmissions.forEach(([time, _value]) => {
         const diff = time - lastEmissionTime;
         expect(diff).toBeGreaterThanOrEqual(expectedInterval);
@@ -38,7 +37,6 @@ Deno.test('debounce should emit all the values when emitted if the frequency is 
   const result$ = debounce<number>(10)(source$);
   const expectedValues = [1, 2, 3, 4, 5];
 
-  let lastEmissionTime = Date.now();
   result$.subscribe({
     next: (value: number) => {
       res.push([Date.now(), value]);
@@ -48,7 +46,7 @@ Deno.test('debounce should emit all the values when emitted if the frequency is 
       const receivedValues = res.map(([_time, value]) => value);
       expect(receivedValues).toEqual(expectedValues);
       const [firstEmission, ...otherEmissions] = res;
-      lastEmissionTime = firstEmission[0];
+      let lastEmissionTime = firstEmission[0];
       otherEmissions.forEach(([time, _value]) => {
         const diff = time - lastEmissionTime;
         expect(diff).toBeGreaterThanOrEqual(expectedInterval);
