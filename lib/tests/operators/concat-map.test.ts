@@ -3,9 +3,11 @@
 import { expect } from 'jsr:@std/expect';
 import { concatMap, Subject } from '../../src/index.ts';
 import { defer } from '../utils.ts';
+import { fromTimer } from '../../src/creation-operators.ts';
 
 Deno.test('concatMap should map values to inner observables and emit them sequentially', async () => {
   const source$ = new Subject<number>();
+  // a factory function that creates observables that emits two values after a delay
   const innerObservableFactory = (value: number) => {
     const inner$ = new Subject<string>();
     setTimeout(() => {
@@ -94,31 +96,28 @@ Deno.test('concatMap should handle errors in the inner observables', async () =>
 });
 
 Deno.test('concatMap should complete when all inner observables and the source complete', async () => {
-  const source$ = new Subject<number>();
+  const source$ = fromTimer(10, [1, 2, 3]);
   const innerObservableFactory = (value: number) => {
     const inner$ = new Subject<string>();
     setTimeout(() => {
       inner$.emit(`A${value}`);
       inner$.complete();
-    }, value * 10);
+    }, 10);
     return inner$;
   };
 
   const result$ = concatMap(innerObservableFactory)(source$);
-  let isComplete = false;
-
+  const res: string[] = [];
+  const startTime = Date.now();
   result$.subscribe({
-    next: () => {},
+    next: (val) => {
+      res.push(val);
+    },
     complete: () => {
-      isComplete = true;
-      expect(isComplete).toBe(true);
+      expect(res).toEqual(['A1', 'A2', 'A3']);
+      expect(Date.now() - startTime).toBeGreaterThanOrEqual(30);
     },
   });
-
-  source$.emit(1);
-  source$.emit(2);
-  source$.emit(3);
-  source$.complete();
 
   await defer(100);
 });

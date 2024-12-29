@@ -1,3 +1,5 @@
+export type EmitterFunction<T> = (idx: number) => T;
+
 /**
  * A FullSubscriber listen to values emitted by an Observable and
  * to its error and complete events.

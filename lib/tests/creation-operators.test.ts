@@ -41,16 +41,17 @@ Deno.test('Operator from creates an Observable emitting NO values', () => {
   assertSpyCalls(sub, 0);
 });
 
-Deno.test('Operator fromTimer creates an Observable emitting 1 value after 10ms', async () => {
+Deno.test('Operator fromTimer creates an Observable emitting 1 value right away and one after 10ms', async () => {
   const sub = spy();
   const complete = spy();
-  const obs$ = fromTimer(5, [1], 'onSubscribe');
+  const obs$ = fromTimer(5, [1, 2], 'onSubscribe');
   obs$.subscribe({
     next: sub,
     complete,
   });
-  await defer(20);
   assertSpyCalls(sub, 1);
+  await defer(20);
+  assertSpyCalls(sub, 2);
   assertSpyCalls(complete, 1);
 });
 
