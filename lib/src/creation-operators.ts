@@ -65,7 +65,7 @@ export const range = (start: number, count: number): Observable<number> => {
 //   return eventObs$;
 // };
 
-const isFunction = <T>(fn: unknown): fn is EmitterFunction<T> => typeof fn === 'function';
+const isEmitterFunction = <T>(fn: unknown): fn is EmitterFunction<T> => typeof fn === 'function';
 
 /**
  * Creates an Observable that will emit with a given delay a set of values.
@@ -81,18 +81,39 @@ export const fromTimer = <T>(
 ): Observable<T> => {
   const arrayObs$ = new Subject<T>();
   let idx = 1;
-  const emitter = () => {
-    arrayObs$.emit(isFunction(values) ? values(0) : values[0]);
-    const timer = setInterval(() => {
-      if (idx < values.length) {
-        arrayObs$.emit(isFunction(values) ? values(idx) : values[idx]);
-        idx++;
-      } else {
-        clearInterval(timer);
+  const emitter = isEmitterFunction(values)
+    // Values are generated from an emitter function
+    ? () => {
+      const firstValue = values(0);
+      if (firstValue === null) {
         arrayObs$.complete();
+        return;
       }
-    }, delayMs);
-  };
+      arrayObs$.emit(firstValue);
+      const timer = setInterval(() => {
+        const value = values(idx);
+        if (value === null) {
+          clearInterval(timer);
+          arrayObs$.complete();
+          return;
+        }
+        arrayObs$.emit(value);
+        idx++;
+      }, delayMs);
+    }
+    // Values is generated from an array
+    : () => {
+      const firstValue = values[0];
+      arrayObs$.emit(firstValue);
+      const timer = setInterval(() => {
+        if (idx >= values.length) {
+          clearInterval(timer);
+          arrayObs$.complete();
+        }
+        arrayObs$.emit(values[idx]);
+        idx++;
+      }, delayMs);
+    };
 
   if (start === 'onSubscribe') {
     arrayObs$.onSubscribe(emitter);

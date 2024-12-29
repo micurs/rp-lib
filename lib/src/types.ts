@@ -1,4 +1,9 @@
-export type EmitterFunction<T> = (idx: number) => T;
+/**
+ * EmitterFunction is a function that takes a value and returns a
+ * value to be emitted by an observable. When the function returns
+ * null, the observable is completed.
+ */
+export type EmitterFunction<T> = (idx: number) => T | null;
 
 /**
  * A FullSubscriber listen to values emitted by an Observable and
