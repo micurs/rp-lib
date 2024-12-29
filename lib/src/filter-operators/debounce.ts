@@ -30,11 +30,9 @@ export const debounce = <T>(time: number): Operator<T, T> => {
           if (nextVal) {
             result$.emit(nextVal);
           } else {
-            console.log('clear timeout. No more values to emit');
             clearInterval(timeout);
             timeout = undefined;
             if (toComplete) {
-              console.log('Completing');
               result$.complete();
             }
           }
@@ -43,14 +41,10 @@ export const debounce = <T>(time: number): Operator<T, T> => {
       error: (err: Error) => result$.error(err),
       complete: () => {
         if (timeout) {
-          console.log('postponing complete', buffer.length, 'values to emit');
           toComplete = true;
           return;
         }
-        if (buffer.length === 0) {
-          console.log('Completing');
-          result$.complete();
-        }
+        result$.complete();
       },
     });
     return result$;
