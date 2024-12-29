@@ -10,7 +10,7 @@ export type EmitterFunction<T> = (idx: number) => T | null;
  * to its error and complete events.
  */
 export interface FullSubscriber<T> {
-  next: (value: T) => void;
+  next?: (value: T) => void;
   error?: (error: Error) => void;
   complete?: () => void;
 }
