@@ -1,8 +1,7 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@micurs/rp-lib@0.0.5": "0.0.5",
-    "jsr:@std/assert@1": "1.0.8",
+    "jsr:@std/assert@1": "1.0.10",
     "jsr:@std/assert@^1.0.10": "1.0.10",
     "jsr:@std/assert@^1.0.8": "1.0.8",
     "jsr:@std/expect@*": "1.0.8",
@@ -22,19 +21,16 @@
     "npm:postcss-import@14": "14.1.0_postcss@8.4.47",
     "npm:postcss@^8.4.32": "8.4.47",
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",
-    "npm:react@19": "19.0.0",
     "npm:react@^18.3.1": "18.3.1",
     "npm:rimraf@*": "6.0.1",
     "npm:tailwindcss@^3.3.6": "3.4.17_postcss@8.4.47",
     "npm:vite-plugin-dts@*": "4.4.0_typescript@5.7.2_vite@4.5.0__@types+node@22.5.4_@types+node@22.5.4",
     "npm:vite@*": "5.4.11_@types+node@22.5.4",
     "npm:vite@4.5.0": "4.5.0_@types+node@22.5.4",
+    "npm:vite@5.4.11": "5.4.11_@types+node@22.5.4",
     "npm:vite@^5.4.9": "5.4.11_@types+node@22.5.4"
   },
   "jsr": {
-    "@micurs/rp-lib@0.0.5": {
-      "integrity": "5b19c86e54aec4019c3b4653e0e8089a0c1c57c02a40760c856208f10c614d49"
-    },
     "@std/assert@1.0.8": {
       "integrity": "ebe0bd7eb488ee39686f77003992f389a06c3da1bbd8022184804852b2fa641b",
       "dependencies": [
@@ -1306,7 +1302,7 @@
       "integrity": "sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==",
       "dependencies": [
         "loose-envify",
-        "react@18.3.1",
+        "react",
         "scheduler"
       ]
     },
@@ -1315,9 +1311,6 @@
       "dependencies": [
         "loose-envify"
       ]
-    },
-    "react@19.0.0": {
-      "integrity": "sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ=="
     },
     "read-cache@1.0.0": {
       "integrity": "sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==",
@@ -2105,12 +2098,10 @@
         ]
       },
       "react-lib": {
-        "dependencies": [
-          "jsr:@micurs/rp-lib@0.0.5"
-        ],
         "packageJson": {
           "dependencies": [
-            "npm:react@19"
+            "npm:@types/react@^18.3.11",
+            "npm:react@^18.3.1"
           ]
         }
       },

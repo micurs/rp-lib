@@ -7,13 +7,11 @@
   "publish": {
     "include": [
       "readme.md",
+      "dist/**/*",
       "src/**/*"
     ]
   },
   "tasks": {
-    "bundle": "deno run --allow-all npm:vite build --config ./vite.config.ts"
-  },
-  "imports": {
-    "@micurs/rp-lib": "jsr:@micurs/rp-lib@0.0.5"
+    "build": "deno run --allow-all  --node-modules-dir npm:vite build --config ./vite.config.ts"
   }
 }
