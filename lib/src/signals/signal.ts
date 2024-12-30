@@ -24,6 +24,27 @@ export class Signal<T> {
   }
 
   /**
+   * Build a Signal from an observable
+   * @param observable - the source observable to build the Signal from
+   * @returns
+   */
+  static fromObservable<T>(
+    observable: Observable<T>,
+    onComplete?: () => void,
+  ): Signal<T | undefined> {
+    const signal = new Signal(observable.value);
+    signal._observable$ = observable;
+    signal._observable$.subscribe({
+      complete: onComplete,
+    });
+    // observable.subscribe({
+    //   next: (value) => signal.value = value,
+    //   complete:
+    // });
+    return signal;
+  }
+
+  /**
    * Emit a new value to the Signal
    * @param value - the value to emit
    */

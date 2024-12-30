@@ -70,7 +70,7 @@ export class Subject<T> implements Observable<T> {
 
     // If there is a pending value emits this value to the new subscriber
     if (this._lastValue !== undefined && run) {
-      newSubscriber.next(this._lastValue);
+      newSubscriber.next?.(this._lastValue);
     }
 
     // If there is a pending error emits this error to the new subscriber
@@ -105,7 +105,7 @@ export class Subject<T> implements Observable<T> {
     }
     this._lastValue = value;
     this._subscribers
-      .forEach((subscriber) => subscriber.next(value));
+      .forEach((subscriber) => subscriber.next?.(value));
   }
 
   /**

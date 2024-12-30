@@ -1,9 +1,34 @@
-# A TypeScript Reactive Programming Library
+# A TypeScript Reactive Programming library
 
 This project is a TypeScript library for reactive programming.
 
-It has been developed as a tutorial for a course on Reactive Programming.
-This is not intended to be a production-ready library.
+It serves as a tutorial for a course on Reactive Programming.
+
+It includes:
+
+- **Subject**: A basic implementation of an Observable.
+- **Operators**: A collection of operators to transform data emitted by the `Subject`.
+- **Signal**: A lightweight implementation built on top of the `Subject`, demonstrating the close relationship between these two constructs.
+
+## Use
+
+The library is available as a Deno module and published in the jsr registry.
+
+```
+deno install @micurs/rp-lib
+```
+
+You can then use the exported functions in your code.
+
+```typescript
+import { Subject } from '@micurs/rp-lib';
+
+const subject$ = new Subject<number>(10);
+
+subject$.subscribe((value) => {
+  console.log(value);
+});
+```
 
 ## License
 
