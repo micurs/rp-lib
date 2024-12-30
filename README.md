@@ -1,3 +1,5 @@
+[![https://jsr.io/@micurs/rp-lib](https://jsr.io/badges/@micurs/rp-lib)](https://jsr.io/@micurs/rp-lib)
+
 # A Reactive Programming library in TypeScript
 
 This repository is a Deno monorepo containing a simple reactive programming library written in TypeScript. It serves as a tutorial for a course on Reactive Programming.

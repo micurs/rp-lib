@@ -1,3 +1,7 @@
+/**
+ * A module that provides functions to compose and pipe reactive operators.
+ * @module compose-pipe
+ */
 import type { Observable, Operator } from './types.ts';
 
 /**
