@@ -1,3 +1,8 @@
+/**
+ * A simple implementation of an Observable Subject class
+ * @module subject
+ */
+
 import type { FullSubscriber, Observable, Subscriber, Subscription } from './types.ts';
 
 /**
@@ -18,10 +23,15 @@ const isOnSubscribe = (value: unknown): value is OnSubscribe => typeof value ===
  * Allows multiple subscribers and to register an emitter function to be executed on first subscription.
  */
 export class Subject<T> implements Observable<T> {
+  /**@internal */
   private _subscribers: Array<FullSubscriber<T>> = [];
+  /**@internal */
   private _lastValue: T | undefined = undefined;
+  /**@internal */
   private _currentError: Error | undefined = undefined;
+  /**@internal */
   private _isCompleted: boolean = false;
+  /**@internal */
   private _emitter: (() => void) | null = null;
 
   /**

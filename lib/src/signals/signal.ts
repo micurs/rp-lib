@@ -1,3 +1,8 @@
+/**
+ * A simple implementation of a Signal class
+ * @module Signal
+ */
+
 import { Subject } from '../index.ts';
 import type { Effect, Observable, Subscription } from '../index.ts';
 
@@ -10,23 +15,37 @@ import type { Effect, Observable, Subscription } from '../index.ts';
  * `Signal.computed()` method.
  */
 export class Signal<T> {
+  /** @internal */
   private _observable$: Observable<T>;
+  /** @internal */
   private static _effects: Set<Effect> = new Set();
 
-  // Used to keep track of the observables that may trigger each effect
+  /**
+   * @internal
+   * Used to keep track of the observables that may trigger each effect
+   */
   private static _effectedObservables$: Map<Effect, Set<Observable<unknown>>> = new Map();
 
-  // Used to keep track of the subscriptions for each active effect
+  /**
+   * Used to keep track of the subscriptions for each active effect
+   * @internal
+   */
   private static _subscriptions: Map<Effect, Array<Subscription>> = new Map();
 
+  /**
+   * Create a new Signal with an initial value
+   * @param value - the initial value of the Signal.
+   */
   constructor(value: T) {
     this._observable$ = new Subject(value);
   }
 
   /**
-   * Build a Signal from an observable
+   * Build a Signal from an observable. The Signal will emit the values
+   * emitted by the observable when they are available.
    * @param observable - the source observable to build the Signal from
-   * @returns
+   * @param onComplete - (optional) a function to call when the source observable completes
+   * @returns a Signal instance
    */
   static fromObservable<T>(
     observable: Observable<T>,
@@ -37,10 +56,6 @@ export class Signal<T> {
     signal._observable$.subscribe({
       complete: onComplete,
     });
-    // observable.subscribe({
-    //   next: (value) => signal.value = value,
-    //   complete:
-    // });
     return signal;
   }
 
@@ -52,14 +67,22 @@ export class Signal<T> {
     this._observable$.emit(value);
   }
 
+  /**
+   * Set the value of the Signal
+   * @example
+   * ```ts
+   *   const signal = new Signal(10);
+   *   signal.value = 20;
+   * ```
+   */
   set value(value: T) {
     this._observable$.emit(value);
   }
 
   /**
    * Get the last value emitted by the Signal.
-   * Note: if this method is called inside an effect function,
-   * it will make sure the internal observable is subscribed to current effect.
+   * > **Note**: if this method is called inside an effect function,
+   * > it will make sure the internal observable is subscribed to the effect function being run.
    * @returns the last value emitted by the Signal
    */
   get value(): T | undefined {
@@ -83,7 +106,8 @@ export class Signal<T> {
 
   /**
    * Add an effect to the signals read in the effect function itself.
-   * Note: the effect function is static as part of the Signal class.
+   * > Note: the `Signal.effect()` function is static as part of the Signal class.
+   *
    * @param fn - the effect to add.
    * @returns a function to make the effect inactive.
    */

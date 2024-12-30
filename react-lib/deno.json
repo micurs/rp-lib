@@ -1,6 +1,6 @@
 {
   "name": "@micurs/react-rp-lib",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "description": "React utilities to work with rp-lib",
   "exports": "./src/index.ts",

@@ -10,13 +10,26 @@ It includes:
 - **Operators**: A collection of operators to transform data emitted by the `Subject`.
 - **Signal**: A lightweight implementation built on top of the `Subject`, demonstrating the close relationship between these two constructs.
 
-## Use
+## Usage
 
 The library is available as a Deno module and published in the jsr registry.
 
+### With Deno
+
 ```
-deno install @micurs/rp-lib
+deno add @micurs/rp-lib
 ```
+
+### With npm
+
+```
+npx jsr add @micurs/rp-lib
+yarn dlx jsr add @micurs/rp-lib
+pnpm dlx jsr add @micurs/rp-lib
+bunx jsr add @micurs/rp-lib
+```
+
+### In your code
 
 You can then use the exported functions in your code.
 
