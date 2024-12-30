@@ -4,7 +4,7 @@ This repository is a Deno monorepo containing a simple reactive programming libr
 
 ## Library Overview
 
-The core library is located in the `lib` folder and includes:
+The core library is located in the [`lib`](./lib) folder and includes:
 
 - **Subject**: A basic implementation of an Observable.
 - **Operators**: A collection of operators to transform data emitted by the `Subject`.
@@ -12,7 +12,7 @@ The core library is located in the `lib` folder and includes:
 
 ## React Integration
 
-Additionally, the repository contains a secondary library in the `react-lib` folder. This library provides:
+Additionally, the repository contains a secondary library in the [`react-lib`](./react-lib) folder. This library provides:
 
 - React hooks for connecting React components with `Subject` and `Signal`.
 
@@ -34,20 +34,6 @@ To run the unit tests:
 
 ```
 deno task test
-```
-
-## This project
-
-This project is a TypeScript library for reactive programming.
-
-It has been developed as a tutorial for a course on Reactive Programming.
-This is not intended to be a production-ready library.
-
-The library code is all in the `lib` workspace folder. You can use just the
-library by importing it from the jsr registry.
-
-```
-deno install @micurs/rp-lib
 ```
 
 ## License
