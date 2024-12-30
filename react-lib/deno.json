@@ -13,5 +13,8 @@
   },
   "tasks": {
     "build": "deno run --allow-all  --node-modules-dir npm:vite build --config ./vite.config.ts"
+  },
+  "imports": {
+    "@micurs/rp-lib": "jsr:@micurs/rp-lib@^0.3.1"
   }
 }
