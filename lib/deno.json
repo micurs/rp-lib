@@ -11,7 +11,7 @@
     ]
   },
   "tasks": {
-    "bundle": "deno run --allow-all npm:vite build --config ./vite.config.ts",
+    "build": "deno run --allow-all --node-modules-dir npm:vite build --config ./vite.config.ts",
     "dev": "deno test --watch",
     "test": "deno test --coverage && deno coverage",
     "coverage": "deno test --coverage && deno coverage --html coverage && open coverage/html/index.html"

@@ -1,41 +1,58 @@
 /// <reference lib="deno.ns" />
 
-import { join } from "@std/path";
-import { defineConfig, type Plugin } from "vite";
-import dts from "vite-plugin-dts";
-import deno from "@deno/vite-plugin";
+import { join } from '@std/path';
+import { defineConfig, type Plugin } from 'vite';
+import dts from 'vite-plugin-dts';
+import deno from '@deno/vite-plugin';
 
-const rpLibPath = join(Deno.cwd(), "../lib/src/index.ts");
-console.log("@micurs/rp-lib", rpLibPath);
+const rpLibPath = join(Deno.cwd(), '../lib/src/index.ts');
 
 export default defineConfig({
   plugins: [
     deno(),
     dts({
-      include: "src",
+      include: 'src',
       rollupTypes: true,
-      insertTypesEntry: true,
+      compilerOptions: {
+        paths: {
+          '@micurs/rp-lib': [rpLibPath],
+        },
+      },
+      beforeWriteFile: (filePath, content) => {
+        if (!filePath.endsWith('index.d.ts')) {
+          return {
+            filePath,
+            content,
+          };
+        }
+        // Replace the import path with the correct library reference.
+        return ({
+          filePath,
+          content: content.replace(/..\/..\/lib\/src\/index.ts/g, '@micurs/rp-lib'),
+        });
+      },
     }) as Plugin,
   ],
   resolve: {
     alias: {
-      "@micurs/rp-lib": rpLibPath,
+      '@micurs/rp-lib': rpLibPath,
     },
   },
   build: {
-    minify: "esbuild",
+    minify: 'esbuild',
     sourcemap: true,
+    emptyOutDir: true,
     reportCompressedSize: true,
     lib: {
-      entry: "./src/index.ts",
-      formats: ["es"],
+      entry: './src/index.ts',
+      formats: ['es'],
     },
     rollupOptions: {
-      external: ["react", "@micurs/rp-lib"],
+      external: ['react', '@micurs/rp-lib'],
       output: {
         compact: true,
-        dir: "dist",
-        entryFileNames: "index.js",
+        dir: 'dist',
+        entryFileNames: 'index.js',
       },
     },
   },

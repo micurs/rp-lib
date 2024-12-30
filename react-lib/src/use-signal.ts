@@ -1,5 +1,5 @@
-import * as React from "react";
-import type { Signal } from "jsr:@micurs/rp-lib";
+import { useEffect, useState } from 'react';
+import type { Signal } from '@micurs/rp-lib';
 
 /**
  * Simple custom hook that can be used to integrate react with rp-lib Signal class.
@@ -8,8 +8,8 @@ import type { Signal } from "jsr:@micurs/rp-lib";
  * @returns a value as emitted by the signal or the default value if the signal has not yet emitted a value.
  */
 export function useSignal<M>(signal: Signal<M>, def: NonNullable<M>): M {
-  const [, setState] = React.useState({});
-  React.useEffect(() => {
+  const [, setState] = useState({});
+  useEffect(() => {
     const clearEffect = signal.addEffect(() => setState({}));
     return () => clearEffect();
   }, [signal]);
