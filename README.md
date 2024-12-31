@@ -1,4 +1,6 @@
 [![https://jsr.io/@micurs/rp-lib](https://jsr.io/badges/@micurs/rp-lib)](https://jsr.io/@micurs/rp-lib)
+[![license:mit](https://img.shields.io/badge/license-MIT-black.svg)](https://opensource.org/licenses/mit)
+![Silicon Villas - Education](https://img.shields.io/badge/Silicon_Villas-Education-blue.svg)
 
 # A Reactive Programming library in TypeScript
 

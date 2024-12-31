@@ -1,17 +1,22 @@
 {
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "tasks": {
+    "update:versions": "deno --allow-read --allow-write --allow-env scripts/update-versions.ts",
     "build": "deno task --config lib/deno.json build && deno task --config react-lib/deno.json build",
     "test": "deno test --coverage && deno coverage",
     "coverage": "deno test --coverage && deno coverage --html coverage && open coverage/html/index.html",
-    "cli-demo": "deno run cli-demo/main.ts",
-    "react-signals-dev": "deno task --config react-signals/deno.json dev",
-    "react-signals": "deno task --config react-signals/deno.json serve"
+    "cli-demo": "deno run demos/cli-demo/main.ts",
+    "react-demo": "deno task --config demos/react-signals/deno.json dev"
   },
   "compilerOptions": {
     "strict": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable", "deno.ns"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable",
+      "deno.ns"
+    ],
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "jsxImportSourceTypes": "@types/react"
@@ -36,11 +41,16 @@
     }
   },
   "workspace": {
-    "members": ["./lib", "./cli-demo", "./react-lib", "./react-signals"]
+    "members": [
+      "./lib",
+      "./react-lib",
+      "./demos/**"
+    ]
   },
   "imports": {
     "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.2",
     "@micurs/rp-lib": "./lib/src/index.ts",
+    "@std/semver": "jsr:@std/semver@^1.0.3",
     "@vitejs/plugin-react-swc": "npm:@vitejs/plugin-react-swc@^3.7.1",
     "@types/react": "npm:@types/react@^18.3.11",
     "@types/react-dom": "npm:@types/react-dom@^18.3.1",

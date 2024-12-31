@@ -5,10 +5,15 @@
     "jsr:@std/assert@1": "1.0.10",
     "jsr:@std/assert@^1.0.10": "1.0.10",
     "jsr:@std/assert@^1.0.8": "1.0.8",
+    "jsr:@std/assert@^1.0.9": "1.0.10",
+    "jsr:@std/assert@~1.0.6": "1.0.10",
     "jsr:@std/expect@*": "1.0.8",
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "jsr:@std/path@*": "1.0.7",
+    "jsr:@std/path@1.0.8": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
+    "jsr:@std/path@~1.0.6": "1.0.8",
+    "jsr:@std/semver@^1.0.3": "1.0.3",
     "jsr:@std/testing@*": "1.0.5",
     "npm:@deno/vite-plugin@^1.0.2": "1.0.2_vite@5.4.11__@types+node@22.5.4_@types+node@22.5.4",
     "npm:@tailwindcss/typography@~0.5.10": "0.5.15_tailwindcss@3.4.17__postcss@8.4.47",
@@ -24,6 +29,7 @@
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",
     "npm:react@^18.3.1": "18.3.1",
     "npm:rimraf@*": "6.0.1",
+    "npm:strip-ansi@7": "7.1.0",
     "npm:tailwindcss@^3.3.6": "3.4.17_postcss@8.4.47",
     "npm:vite-plugin-dts@*": "4.4.0_typescript@5.7.2_vite@4.5.0__@types+node@22.5.4_@types+node@22.5.4",
     "npm:vite@*": "5.4.11_@types+node@22.5.4",
@@ -62,6 +68,9 @@
     },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    },
+    "@std/semver@1.0.3": {
+      "integrity": "7c139c6076a080eeaa4252c78b95ca5302818d7eafab0470d34cafd9930c13c8"
     },
     "@std/testing@1.0.5": {
       "integrity": "6e693cbec94c81a1ad3df668685c7ba8e20742bb10305bc7137faa5cf16d2ec4",
@@ -2081,6 +2090,7 @@
     "dependencies": [
       "jsr:@std/assert@1",
       "jsr:@std/path@^1.0.8",
+      "jsr:@std/semver@^1.0.3",
       "npm:@deno/vite-plugin@^1.0.2",
       "npm:@types/react-dom@^18.3.1",
       "npm:@types/react@^18.3.11",
@@ -2091,9 +2101,19 @@
       "npm:vite@^5.4.9"
     ],
     "members": {
-      "cli-demo": {
+      "demos/cli-demo": {
         "dependencies": [
           "jsr:@std/assert@1"
+        ]
+      },
+      "demos/react-signals": {
+        "dependencies": [
+          "npm:@tailwindcss/typography@~0.5.10",
+          "npm:autoprefixer@^10.4.16",
+          "npm:daisyui@^4.4.20",
+          "npm:postcss-import@14",
+          "npm:postcss@^8.4.32",
+          "npm:tailwindcss@^3.3.6"
         ]
       },
       "lib": {
@@ -2111,16 +2131,6 @@
             "npm:react@^18.3.1"
           ]
         }
-      },
-      "react-signals": {
-        "dependencies": [
-          "npm:@tailwindcss/typography@~0.5.10",
-          "npm:autoprefixer@^10.4.16",
-          "npm:daisyui@^4.4.20",
-          "npm:postcss-import@14",
-          "npm:postcss@^8.4.32",
-          "npm:tailwindcss@^3.3.6"
-        ]
       }
     }
   }
