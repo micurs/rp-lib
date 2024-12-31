@@ -1,6 +1,6 @@
 {
   "name": "@micurs/react-rp-lib",
-  "version": "1.0.0",
+  "version": "0.3.2",
   "module": "dist/index.js",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
