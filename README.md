@@ -22,19 +22,32 @@ Additionally, the repository contains a secondary library in the [`react-lib`](.
 
 ## CLI Demo
 
-The `cli-demo` folder contains a simple CLI demo that demonstrates the core functionality of the library.
+The `demos/cli-demo` folder contains a simple CLI demo that demonstrates the core functionality of the library.
+You can run each file individually using the `deno` command. For example:
 
-## Build and run tests and demos
+```
+deno run demos/cli-demo/concat-map.ts
+```
 
-This project runs on `deno`, so no need to build anything before running the code.
-
-To run the CLI demo:
+Or you can run the `cli-demo` task to run all the demos:
 
 ```
 deno task cli-demo
 ```
 
-To run the unit tests:
+## React Demo
+
+The `demos/react-signal` folder contains a simple React demo that demonstrates how to use the `useSignal` and `useSubject` hooks in a React application.
+
+You can run the demo using the `deno` command:
+
+```
+deno task react-demo
+```
+
+## Tests
+
+To run all the unit tests use the following command:
 
 ```
 deno task test
