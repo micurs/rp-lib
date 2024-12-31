@@ -66,8 +66,13 @@ const main = async (update: UpdateType) => {
       newVersion.patch++;
       break;
     case 'none':
-    default:
       break;
+    default:
+      console.error(
+        `Invalid update type: "${update}"`,
+        '\nValid values are: "major", "minor", or "patch"',
+      );
+      return;
   }
   console.log('Updating Version to:', semver.format(newVersion));
 
@@ -76,7 +81,8 @@ const main = async (update: UpdateType) => {
   await updateVersion(newVersion, './react-lib');
 };
 
-const update = Deno.args[0] ?? 'none' as UpdateType;
+// Get the first parameter as the update type (no checks yet on valid values)
+const update = (Deno.args[0] ?? 'none') as UpdateType;
 
 await main(update);
 Deno.exit(0);
