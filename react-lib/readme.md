@@ -14,8 +14,8 @@ The library provides a set of hooks to interact with the `rp-lib` library
 ### Observer hook
 
 ```tsx
-import { Subject } from "@micurs/rp-lib";
-import { useObservable } from "@micurs/react-rp-lib";
+import { Subject } from '@micurs/rp-lib';
+import { useObservable } from '@micurs/react-rp-lib';
 
 const counter$ = new Subject<number>(1);
 
@@ -29,8 +29,8 @@ const counterComponent = () => {
 ### Signal hook
 
 ```tsx
-import { Signal } from "@micurs/rp-lib";
-import { useSignal } from "@micurs/react-rp-lib";
+import { Signal } from '@micurs/rp-lib';
+import { useSignal } from '@micurs/react-rp-lib';
 
 const signal = new Signal(10);
 

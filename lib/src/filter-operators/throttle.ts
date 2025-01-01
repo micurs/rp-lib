@@ -1,7 +1,5 @@
-import { l } from 'vite';
 import type { Observable, Operator } from '../index.ts';
 import { Subject } from '../index.ts';
-import { s } from 'vite';
 
 /**
  * The throttle operator creates a new observable that only emits
