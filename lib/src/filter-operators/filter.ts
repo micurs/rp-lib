@@ -22,7 +22,7 @@ export const filter = <T>(predicate: Predicate<T>): Operator<T, T> => {
         },
         error: (err) => result$.error(err),
         complete: () => result$.complete(),
-      });
+      }, true);
     });
     return result$;
   };

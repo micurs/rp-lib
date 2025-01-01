@@ -1,5 +1,5 @@
 {
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "tasks": {
     "update:versions": "deno --allow-read --allow-write --allow-env scripts/update-versions.ts",

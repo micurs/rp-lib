@@ -13,8 +13,13 @@ export const throttle = <T>(time: number): Operator<T, T> => {
     const result$ = new Subject<T>();
     let lastSourceValue: T | undefined = undefined;
     let lastEmissionTime: number | undefined = undefined;
+    let _timeout: ReturnType<typeof setTimeout> | undefined = undefined;
     source$.subscribe({
       next: (val: T) => {
+        if (_timeout !== undefined) {
+          clearTimeout(_timeout);
+          _timeout = undefined;
+        }
         if (lastEmissionTime === undefined) {
           result$.emit(val);
           lastEmissionTime = Date.now();
@@ -27,18 +32,25 @@ export const throttle = <T>(time: number): Operator<T, T> => {
           lastSourceValue = undefined;
         } else {
           lastSourceValue = val;
+          if (lastSourceValue === undefined) {
+            return;
+          }
+          _timeout = setTimeout(() => {
+            if (result$.isCompleted) {
+              return;
+            }
+            lastSourceValue !== undefined && result$.emit(lastSourceValue);
+            lastEmissionTime = Date.now();
+            lastSourceValue = undefined;
+            if (source$.isCompleted) {
+              result$.complete();
+            }
+          }, time - deltaTime);
         }
       },
       error: (err: Error) => result$.error(err),
       complete: () => {
-        if (lastSourceValue !== undefined) {
-          setTimeout(() => {
-            result$.emit(lastSourceValue!);
-            result$.complete();
-          }, time - (Date.now() - lastEmissionTime!));
-          return;
-        }
-        result$.complete();
+        lastSourceValue === undefined && result$.complete();
       },
     });
     return result$;
