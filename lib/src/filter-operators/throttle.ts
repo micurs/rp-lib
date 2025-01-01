@@ -11,9 +11,16 @@ import { Subject } from '../index.ts';
 export const throttle = <T>(time: number): Operator<T, T> => {
   return <T>(source$: Observable<T>): Observable<T> => {
     const result$ = new Subject<T>();
-    let lastSourceValue: T | undefined = undefined;
+    let lastNotEmittedValue: T | undefined = undefined;
     let lastEmissionTime: number | undefined = undefined;
     let _timeout: ReturnType<typeof setTimeout> | undefined = undefined;
+
+    const throttleEmit = (val: T) => {
+      result$.emit(val);
+      lastEmissionTime = Date.now();
+      lastNotEmittedValue = undefined;
+    };
+
     source$.subscribe({
       next: (val: T) => {
         if (_timeout !== undefined) {
@@ -21,27 +28,20 @@ export const throttle = <T>(time: number): Operator<T, T> => {
           _timeout = undefined;
         }
         if (lastEmissionTime === undefined) {
-          result$.emit(val);
-          lastEmissionTime = Date.now();
+          throttleEmit(val);
           return;
         }
         const deltaTime = Date.now() - lastEmissionTime;
         if (deltaTime >= time) {
-          result$.emit(val);
-          lastEmissionTime = Date.now();
-          lastSourceValue = undefined;
+          throttleEmit(val);
         } else {
-          lastSourceValue = val;
-          if (lastSourceValue === undefined) {
-            return;
-          }
+          lastNotEmittedValue = val;
           _timeout = setTimeout(() => {
+            _timeout = undefined;
             if (result$.isCompleted) {
               return;
             }
-            lastSourceValue !== undefined && result$.emit(lastSourceValue);
-            lastEmissionTime = Date.now();
-            lastSourceValue = undefined;
+            throttleEmit(val);
             if (source$.isCompleted) {
               result$.complete();
             }
@@ -50,7 +50,7 @@ export const throttle = <T>(time: number): Operator<T, T> => {
       },
       error: (err: Error) => result$.error(err),
       complete: () => {
-        lastSourceValue === undefined && result$.complete();
+        lastNotEmittedValue === undefined && result$.complete();
       },
     });
     return result$;

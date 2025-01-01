@@ -33,8 +33,12 @@ export const useObservables = <A, B>(
   v: A,
   operator: Operator<A, B>,
 ): [A | undefined, B | undefined, (v: A) => void] => {
-  const source$ = useRef(new Subject(v));
-  const out$ = useRef(operator(source$.current));
+  const source$ = useRef(null);
+  const out$ = useRef(null);
+  if (source$.current === null) {
+    source$.current = new Subject(v);
+    out$.current = operator(source$.current);
+  }
   return [
     useObservable(source$.current),
     useObservable(out$.current),
