@@ -1,7 +1,6 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@micurs/rp-lib@~0.3.1": "0.3.1",
     "jsr:@std/assert@1": "1.0.10",
     "jsr:@std/assert@^1.0.10": "1.0.10",
     "jsr:@std/assert@^1.0.8": "1.0.8",
@@ -43,9 +42,6 @@
     "npm:vite@^5.4.9": "5.4.11_@types+node@22.5.4"
   },
   "jsr": {
-    "@micurs/rp-lib@0.3.1": {
-      "integrity": "7315742ab9b917f1fbc15b46af54ab793bdf353bbaad2f2904fadc18a6aaf59b"
-    },
     "@std/assert@1.0.8": {
       "integrity": "ebe0bd7eb488ee39686f77003992f389a06c3da1bbd8022184804852b2fa641b",
       "dependencies": [
@@ -2440,7 +2436,7 @@
       },
       "react-lib": {
         "dependencies": [
-          "jsr:@micurs/rp-lib@~0.3.1"
+          "jsr:@micurs/rp-lib@0.4"
         ],
         "packageJson": {
           "dependencies": [

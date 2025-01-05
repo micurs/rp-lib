@@ -20,22 +20,21 @@ Deno.test('throttle should emit only one value if the original observable emits 
 });
 
 Deno.test('throttle emit the last value after the throttle time after the source completes', async () => {
-  const throttleTime = 100;
-  const source$ = fromTimer(20, [1, 2, 3, 4, 5, 6]);
-  const result$ = throttle<number>(100)(source$);
+  const throttleTime = 300;
+  const source$ = fromTimer(100, [1, 2, 3, 4]);
+  const result$ = throttle<number>(throttleTime)(source$);
   const res: Array<number> = [];
   let time = Date.now() - throttleTime; // The first emission will be immediate
   result$.subscribe({
     next: (value: number) => {
       const now = Date.now();
-      // console.log(value, ' > Delta Time: ', now - time);
       expect(now - time).toBeGreaterThanOrEqual(throttleTime);
       time = now;
       res.push(value);
     },
     complete: () => {
       // First and last value should be emitted.
-      expect(res).toEqual([1, 5, 6]);
+      expect(res).toEqual([1, 3, 4]);
     },
   });
   await new Promise((resolve) => setTimeout(resolve, throttleTime * 3));
