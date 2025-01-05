@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import { Subject } from '@micurs/rp-lib';
 import type { Observable, Operator } from '@micurs/rp-lib';
+import { Subject } from '@micurs/rp-lib';
 
 import { useObservable } from './index.ts';
 

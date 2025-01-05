@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { Observable, ObservableValues } from '../../lib/src/types.ts';
-import { mergeArray } from '../../lib/src/index.ts';
+import type { Observable, ObservableValues } from '@micurs/rp-lib';
+import { mergeArray } from '@micurs/rp-lib';
 
 // type P = [Observable<number>, Observable<string>, string];
 // type P2 = ObservableValues<P>; // [number, string]
