@@ -13,6 +13,9 @@
     "activityBar.activeBackground": "#0e156d",
     "activityBar.activeBorder": "#e6d627",
     "activityBar.foreground": "#e6d627",
-    "activityBar.inactiveForeground": "#a59e53",
+    "activityBar.inactiveForeground": "#a59e53"
   },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
 }
