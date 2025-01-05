@@ -1,5 +1,5 @@
 import { Subject } from '../index.ts';
-import type { Observable, ObservableValues, TypeOfTuple } from '../types.ts';
+import type { Observable, ObservableValues } from '../types.ts';
 
 /**
  * Merge an array of multiple observables into a single observable.
