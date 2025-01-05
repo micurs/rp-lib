@@ -1,5 +1,6 @@
 import { expect } from 'jsr:@std/expect';
 import { debounce, fromArray, fromTimer } from '../../src/index.ts';
+import { defer } from '../utils.ts';
 
 Deno.test('debounce should emit all the values with the expected max frequency', async () => {
   const expectedInterval = 10;
@@ -27,7 +28,7 @@ Deno.test('debounce should emit all the values with the expected max frequency',
     },
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  await defer(100);
 });
 
 Deno.test('debounce should emit all the values when emitted if the frequency is larger than the debounce time', async () => {
@@ -55,5 +56,5 @@ Deno.test('debounce should emit all the values when emitted if the frequency is 
     },
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 200));
+  await defer(200);
 });

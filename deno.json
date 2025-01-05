@@ -1,11 +1,11 @@
 {
-  "version": "0.3.4",
+  "version": "0.4.0",
   "license": "MIT",
   "tasks": {
     "update:versions": "deno --allow-read --allow-write --allow-env scripts/update-versions.ts",
     "build": "deno task --config lib/deno.json build && deno task --config react-lib/deno.json build",
-    "test": "deno test --coverage && deno coverage",
-    "coverage": "deno test --coverage && deno coverage --html coverage && open coverage/html/index.html",
+    "test": "deno test --allow-env --coverage && deno coverage",
+    "coverage": "deno test --allow-env --coverage && deno coverage --html coverage && open coverage/html/index.html",
     "cli-demo": "deno run demos/cli-demo/main.ts",
     "react-demo": "deno task --config demos/react-signals/deno.json dev"
   },
@@ -15,6 +15,7 @@
       "ES2022",
       "DOM",
       "DOM.Iterable",
+      "dom.asynciterable",
       "deno.ns"
     ],
     "jsx": "react-jsx",
@@ -51,11 +52,14 @@
     "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.2",
     "@micurs/rp-lib": "./lib/src/index.ts",
     "@std/semver": "jsr:@std/semver@^1.0.3",
+    "@std/testing": "jsr:@std/testing@^1.0.8",
     "@vitejs/plugin-react-swc": "npm:@vitejs/plugin-react-swc@^3.7.1",
+    "@testing-library/react": "npm:@testing-library/react@16",
     "@types/react": "npm:@types/react@^18.3.11",
     "@types/react-dom": "npm:@types/react-dom@^18.3.1",
     "@std/assert": "jsr:@std/assert@1",
     "@std/path": "jsr:@std/path@^1.0.8",
+    "global-jsdom": "npm:global-jsdom@24",
     "vite": "npm:vite@^5.4.9",
     "vite-plugin-dts": "npm:vite-plugin-dts",
     "react": "npm:react@^18.3.1",

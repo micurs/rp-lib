@@ -4,6 +4,7 @@ export * from './creation-operators.ts';
 export * from './trans-operators/tap.ts';
 export * from './trans-operators/map.ts';
 export * from './trans-operators/merge.ts';
+export * from './trans-operators/merge.array.ts';
 export * from './trans-operators/concat.ts';
 export * from './trans-operators/flat-map.ts';
 export * from './trans-operators/switch-map.ts';

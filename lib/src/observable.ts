@@ -122,10 +122,10 @@ export class Subject<T> implements Observable<T> {
    * Complete the Observable
    */
   complete() {
+    this._isCompleted = true;
     this._subscribers
       .forEach((subscriber) => subscriber.complete?.());
     this._subscribers = [];
-    this._isCompleted = true;
   }
 
   /**

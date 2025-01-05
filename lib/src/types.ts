@@ -56,3 +56,19 @@ export type Operator<A, B> = (observable: Observable<A>) => Observable<B>;
  * An Effect is a function that is executed when an Observable is subscribed to.
  */
 export type Effect = () => void;
+
+/**
+ * Type function to extract the
+ * type of the values of an array of observables
+ */
+export type ObservableValues<T extends ReadonlyArray<unknown>> = T extends
+  [Observable<infer A>, ...infer B] // If there is a first Observable
+  ? B['length'] extends 0 // If B is empty
+    ? [A] // Return [A]
+  : [A, ...ObservableValues<B>] // First Value (A) and recursively compute the remaining values
+  : []; // No Observables in the array
+
+export type TypeOfTuple<T extends ReadonlyArray<unknown>> = T extends [infer A, ...infer B]
+  ? B['length'] extends 0 ? A
+  : A | TypeOfTuple<B>
+  : never;
