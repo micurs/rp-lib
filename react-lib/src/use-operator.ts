@@ -29,10 +29,10 @@ export const useOperator = <A, B>(
   const setter = useCallback((newVal: A) => {
     source$ && source$.emit(newVal);
   }, [source$]);
+  const inValue = useObservable<A>(source$);
   const outValue = useObservable<B>(out$);
-  console.log('Returning values', outValue);
   return [
-    source$.value,
+    inValue,
     outValue,
     setter,
   ];
