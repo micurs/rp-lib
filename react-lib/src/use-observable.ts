@@ -1,4 +1,4 @@
-import { useEffect, type useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Observable } from '@micurs/rp-lib';
 
 /**
