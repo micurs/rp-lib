@@ -16,11 +16,11 @@ export const useObservables = <
 >(
   observables: Obs,
 ): ObservableValues<Obs> => {
-  const [values, setState] = useState(observables.map((o) => o.value));
+  const [values, setState] = useState(() => observables.map((o) => o.value));
   useEffect(() => {
     const subscription = mergeArray(observables).subscribe((_) => {
-      setState(observables.map((o) => o.value));
-    }, false);
+      setState(() => observables.map((o) => o.value));
+    }, false); // Avoid changing state on current value to avoid a re-render.
     return () => {
       subscription.unsubscribe(); // Cleanup subscription
     };
