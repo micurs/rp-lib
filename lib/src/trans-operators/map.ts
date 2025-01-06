@@ -9,8 +9,7 @@ import { Subject } from '../index.ts';
  */
 export const map =
   <T, U>(transform: (value: T) => U): Operator<T, U> => (source: Observable<T>): Observable<U> => {
-    const result$ = new Subject<U>();
-    result$.onSubscribe(() => {
+    const result$ = new Subject<U>(() => {
       source.subscribe({
         next: (value) => result$.emit(transform(value)),
         error: (err) => result$.error(err),

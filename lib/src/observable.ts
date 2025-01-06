@@ -78,14 +78,15 @@ export class Subject<T> implements Observable<T> {
     // Add the new subscriber to the list
     this._subscribers.push(newSubscriber);
 
-    // If there is a pending value emits this value to the new subscriber
-    if (this._lastValue !== undefined && run) {
-      newSubscriber.next?.(this._lastValue);
-    }
-
-    // If there is a pending error emits this error to the new subscriber
+    // If there is a pending error emits this error to the new subscriber and do not emit any values.
     if (this._currentError && newSubscriber.error) {
       newSubscriber.error(this._currentError);
+      return { unsubscribe };
+    }
+
+    // If there is pending value, no emitter and `run` is true: emits current value.
+    if (this._lastValue !== undefined && !this._emitter && run) {
+      newSubscriber.next?.(this._lastValue);
     }
 
     // If we have a onSubscribe function, call it
