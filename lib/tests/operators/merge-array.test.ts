@@ -11,12 +11,37 @@ Deno.test('mergeArray correctly emit when one of the merged observable emit', ()
   const obs1$ = new Subject(0);
   const obs2$ = new Subject('test');
   const obs3$ = new Subject({ test: 100 });
+  // Create a new observable merging the 3 sources and with undefined value
   const merged$ = mergeArray([obs1$, obs2$, obs3$]);
 
-  merged$.subscribe(spyFn, false);
+  merged$.subscribe(spyFn);
+
+  // We expect no call to the subscriber because the merged$.value is undefined.
+  assertSpyCalls(spyFn, 0);
+
   obs2$.emit('new test');
   assertSpyCalls(spyFn, 1);
   assertSpyCallArg(spyFn, 0, 0, 'new test');
+});
+
+Deno.test('mergeArray correctly emit when one of the merged observable emit', () => {
+  const spyFn = spy();
+
+  const obs1$ = new Subject(0);
+  const obs2$ = new Subject('test');
+  const obs3$ = new Subject({ test: 100 });
+  // Create a new observable merging the 3 sources and with value matching the last one.
+  const merged$ = mergeArray([obs1$, obs2$, obs3$], 2);
+
+  merged$.subscribe(spyFn);
+
+  // We expect to get an observable with the last source observable value.
+  assertSpyCalls(spyFn, 1);
+  assertSpyCallArg(spyFn, 0, 0, { test: 100 });
+
+  obs2$.emit('new test');
+  assertSpyCalls(spyFn, 2);
+  assertSpyCallArg(spyFn, 1, 0, 'new test');
 });
 
 Deno.test('mergeArray correctly completes when all source observable complete', () => {
