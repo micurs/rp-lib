@@ -10,12 +10,14 @@ import type { Observable } from '@micurs/rp-lib';
 export const useObservable = <T>(
   obs$: Observable<T>,
 ): T | undefined => {
-  const [value, setState] = useState(() => obs$.value); // A dummy used to trigger a re-render
+  const [_, setState] = useState(() => obs$.value); // A dummy state used to trigger a re-render
   useEffect(() => {
-    const subscription = obs$.subscribe(() => setState(() => obs$.value), true);
+    // Subscribe, but don't set the state on current value to avoid a re-rendering.
+    const subscription = obs$.subscribe(setState, false);
+
     return () => {
       subscription.unsubscribe(); // Cleanup subscription
     };
   }, [obs$]);
-  return value;
+  return obs$.value;
 };

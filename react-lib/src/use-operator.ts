@@ -22,17 +22,25 @@ export const useOperator = <A, B>(
   val: A,
   operator: Operator<A, B>,
 ): [A | undefined, B | undefined, (v: A) => void] => {
+  // Store the source$ observable, but do not subscribe to it.
   const source$ = useMemo<Observable<A> | null>(() => new Subject(val), [val]);
+
+  // Create the out$ observable by applying the operator on the source$ observable.
   const out$ = useMemo<Observable<B> | null>(() => {
     return operator(source$);
   }, [val, operator]);
+
+  // Create the setter function, this will trigger a change in the
+  // source$ and out$ observables.
   const setter = useCallback((newVal: A) => {
     source$ && source$.emit(newVal);
   }, [source$]);
-  const inValue = useObservable<A>(source$);
+
+  // Subscribe to the out$ observable only to avoid 2 re-renders when source changes.
   const outValue = useObservable<B>(out$);
+
   return [
-    inValue,
+    source$.value,
     outValue,
     setter,
   ];

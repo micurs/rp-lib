@@ -13,13 +13,14 @@ Deno.test('useOperator should return the current values of the observables', () 
   let renderCount = 0;
   const operator = map((v: number) => v * 2);
   const TestComponent = () => {
-    const [srcValue, outValue, _] = useOperator(initialValue, operator);
+    const [sourceValue, outValue, _] = useOperator(initialValue, operator);
     renderCount++;
-    return <span>{srcValue},{outValue}</span>;
+    return <span>{sourceValue},{outValue}</span>;
   };
 
   const { container } = render(<TestComponent />);
   expect(container.innerHTML).toBe('<span>42,84</span>');
+  // We expect to renderings. The second is the one with the outValue set.
   expect(renderCount).toBe(2);
 });
 
@@ -41,7 +42,9 @@ Deno.test('useOperator should rerender when the setter function is called', asyn
 
   const { container, getByText } = render(<TestComponent />);
 
+  // We expect to renderings. The second is the one with the outValue set.
   expect(renderCount).toBe(2);
+  expect(container.innerHTML).toContain('<span>42,84</span>');
 
   // Locate and click the button
   const button = getByText('Emit');
@@ -51,5 +54,6 @@ Deno.test('useOperator should rerender when the setter function is called', asyn
   await waitFor(() => {
     expect(container.innerHTML).toContain('<span>10,20</span>');
   });
+  // One more rendering since the source inner observable was changed.
   expect(renderCount).toBe(3);
 });
