@@ -1,6 +1,6 @@
 {
   "name": "@micurs/react-rp-lib",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "license": "MIT",
   "description": "React utilities to work with rp-lib",
   "exports": "./src/index.ts",
@@ -18,6 +18,6 @@
     "coverage": "deno test --allow-env --coverage && deno coverage --html coverage && open coverage/html/index.html"
   },
   "imports": {
-    "@micurs/rp-lib": "jsr:@micurs/rp-lib@^0.4.0"
+    "@micurs/rp-lib": "jsr:@micurs/rp-lib@^0.5.0"
   }
 }
