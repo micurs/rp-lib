@@ -11,15 +11,14 @@ export const tap = <T>(sideEffect: (value: T) => void): Operator<T, T> =>
 (
   source$: Observable<T>,
 ): Observable<T> => {
-  const result$ = new Subject<T>();
-  result$.onSubscribe(() => {
+  const result$ = new Subject<T>((out$) => {
     source$.subscribe({
       next: (value) => {
         sideEffect(value);
-        result$.emit(value);
+        out$.emit(value);
       },
-      error: (error) => result$.error(error),
-      complete: () => result$.complete(),
+      error: (error) => out$.error(error),
+      complete: () => out$.complete(),
     });
   });
   return result$;

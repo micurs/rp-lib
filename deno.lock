@@ -2436,7 +2436,7 @@
       },
       "react-lib": {
         "dependencies": [
-          "jsr:@micurs/rp-lib@0.4"
+          "jsr:@micurs/rp-lib@0.5"
         ],
         "packageJson": {
           "dependencies": [

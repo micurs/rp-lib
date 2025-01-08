@@ -15,32 +15,34 @@ export const concat =
     const result$ = new Subject<I1 | I2>();
     const secondSourceCache: Array<I2> = [];
 
-    // Subscribe to the second observable and cache its
-    // values until the first observable completes
-    secondSource$.subscribe({
-      next: (value: I2) => {
-        if (firstSource$.isCompleted) {
-          result$.emit(value);
-        } else {
-          secondSourceCache.push(value);
-        }
-      },
-      error: (err: Error) => result$.error(err),
-      complete: () => firstSource$.isCompleted && result$.complete(),
-    });
+    result$.onSubscribe(() => {
+      // Subscribe to the second observable and cache its
+      // values until the first observable completes
+      secondSource$.subscribe({
+        next: (value: I2) => {
+          if (firstSource$.isCompleted) {
+            result$.emit(value);
+          } else {
+            secondSourceCache.push(value);
+          }
+        },
+        error: (err: Error) => result$.error(err),
+        complete: () => firstSource$.isCompleted && result$.complete(),
+      });
 
-    // Subscribe to the first observable and emit its values to the
-    // result observable when it completes, we emit all cached values
-    // from the second observable
-    firstSource$.subscribe({
-      next: (value: I1) => result$.emit(value),
-      error: (err: Error) => result$.error(err),
-      complete: () => {
-        // Now we emit all cached values from the second observable
-        secondSourceCache.forEach((value: I2) => result$.emit(value));
-        // If the second observable has completed, we complete the result observable
-        secondSource$.isCompleted && result$.complete();
-      },
+      // Subscribe to the first observable and emit its values to the
+      // result observable when it completes, we emit all cached values
+      // from the second observable
+      firstSource$.subscribe({
+        next: (value: I1) => result$.emit(value),
+        error: (err: Error) => result$.error(err),
+        complete: () => {
+          // Now we emit all cached values from the second observable
+          secondSourceCache.forEach((value: I2) => result$.emit(value));
+          // If the second observable has completed, we complete the result observable
+          secondSource$.isCompleted && result$.complete();
+        },
+      });
     });
     return result$;
   };

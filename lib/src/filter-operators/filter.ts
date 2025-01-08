@@ -12,8 +12,7 @@ export type Predicate<T> = (value: T, idx: number) => boolean;
 export const filter = <T>(predicate: Predicate<T>): Operator<T, T> => {
   return (source$: Observable<T>): Observable<T> => {
     let count = 0;
-    const result$ = new Subject<T>();
-    result$.onSubscribe(() => {
+    const result$ = new Subject<T>(() => {
       source$.subscribe({
         next: (value: T) => {
           if (predicate(value, count++)) {
