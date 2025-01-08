@@ -3,15 +3,16 @@ import { Subject } from '@micurs/rp-lib';
 export const main = () => {
   return new Promise<void>((resolve) => {
     console.log('Subscribing to a Subject Observable:');
-    const obs$ = new Subject<number>();
+    const obs$ = new Subject<number>((s) => {
+      s.emit(1);
+      s.emit(2);
+      s.emit(3);
+    });
     obs$.subscribe({
       next: console.log,
       complete: resolve,
     });
 
-    obs$.emit(1);
-    obs$.emit(2);
-    obs$.emit(3);
     resolve();
   });
 };

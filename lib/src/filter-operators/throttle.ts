@@ -14,9 +14,9 @@ export const throttle = <T>(time: number): Operator<T, T> => {
     let lastEmissionTime: number | undefined = undefined;
     let _timeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
-    const result$ = new Subject<T>(() => {
+    const result$ = new Subject<T>((out$) => {
       const throttleEmit = (val: T) => {
-        result$.emit(val);
+        out$.emit(val);
         lastEmissionTime = Date.now();
         lastNotEmittedValue = undefined;
       };
@@ -34,12 +34,13 @@ export const throttle = <T>(time: number): Operator<T, T> => {
           if (deltaTime >= time) {
             throttleEmit(val);
           } else {
+            // Delay the emission of this last value by the
+            // remaining time interval (this will be cancelled
+            // if another value is emitted by the source before
+            // the interval).
             lastNotEmittedValue = val;
             _timeout = setTimeout(() => {
               _timeout = undefined;
-              // if (result$.isCompleted) {
-              //   return;
-              // }
               throttleEmit(val);
               if (source$.isCompleted) {
                 result$.complete();
