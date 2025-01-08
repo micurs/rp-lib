@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import type { Observable, Operator } from '@micurs/rp-lib';
 import { Subject } from '@micurs/rp-lib';
 
-import { useObservable } from './index.ts';
+import { useObservables } from './index.ts';
 
 /**
  * A hook that creates a source observable and an output observable using the given operator.
@@ -21,14 +21,14 @@ import { useObservable } from './index.ts';
 export const useOperator = <A, B>(
   val: A,
   operator: Operator<A, B>,
-): [A | undefined, B | undefined, (v: A) => void] => {
+): [A, B, (v: A) => void] => {
   // Store the source$ observable, but do not subscribe to it.
-  const source$ = useMemo<Observable<A> | null>(() => new Subject(val), [val]);
+  const source$ = useMemo<Observable<A>>(() => new Subject(val), [val]);
 
   // Create the out$ observable by applying the operator on the source$ observable.
-  const out$ = useMemo<Observable<B> | null>(() => {
-    return operator(source$);
-  }, [val, operator]);
+  const out$ = useMemo<Observable<B>>(() => {
+    return operator(source$!);
+  }, [source$, operator]);
 
   // Create the setter function, this will trigger a change in the
   // source$ and out$ observables.
@@ -36,11 +36,12 @@ export const useOperator = <A, B>(
     source$ && source$.emit(newVal);
   }, [source$]);
 
-  // Subscribe to the out$ observable only to avoid 2 re-renders when source changes.
-  const outValue = useObservable<B>(out$);
+  // Subscribe to source$ and out$ observables. Changes to both of them will trigger a re-render
+  // and they may happen at different times.
+  const [srcValue, outValue] = useObservables<[Observable<A>, Observable<B>]>([source$, out$]);
 
   return [
-    source$.value,
+    srcValue,
     outValue,
     setter,
   ];

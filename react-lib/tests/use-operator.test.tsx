@@ -3,7 +3,9 @@ import { expect } from 'jsr:@std/expect';
 import 'global-jsdom/register';
 import { configure, fireEvent, render, waitFor } from '@testing-library/react';
 
-import { map } from 'jsr:@micurs/rp-lib';
+import { delay, map, pipe } from 'jsr:@micurs/rp-lib';
+import type { Operator } from 'jsr:@micurs/rp-lib';
+
 import { useOperator } from '../src/index.ts';
 
 configure({ reactStrictMode: false });
@@ -20,7 +22,9 @@ Deno.test('useOperator should return the current values of the observables', () 
 
   const { container } = render(<TestComponent />);
   expect(container.innerHTML).toBe('<span>42,84</span>');
-  // We expect to renderings. The second is the one with the outValue set.
+
+  // We expect two renderings. One for the source operator and
+  // A second one for the operator built with the the operator.
   expect(renderCount).toBe(2);
 });
 
@@ -56,4 +60,32 @@ Deno.test('useOperator should rerender when the setter function is called', asyn
   });
   // One more rendering since the source inner observable was changed.
   expect(renderCount).toBe(3);
+});
+
+Deno.test('useOperator should rerender when the setter function is called and when the output observable emits', async () => {
+  let renderCount = 0;
+  const initialValue = 10;
+  const operator: Operator<number, number> = pipe(
+    delay(10),
+    map((x) => x * 2),
+  );
+  const TestComponent = () => {
+    const [sourceVal, outValue, _] = useOperator<number, number>(initialValue, operator);
+    renderCount++;
+    return (
+      <>
+        <span>{sourceVal},{outValue}</span>
+      </>
+    );
+  };
+
+  const { container } = render(<TestComponent />);
+
+  expect(renderCount).toBe(1);
+  expect(container.innerHTML).toContain('<span>10,</span>');
+
+  await waitFor(() => {
+    expect(container.innerHTML).toContain('<span>10,20</span>');
+  }, { interval: 30 });
+  expect(renderCount).toBe(2);
 });
