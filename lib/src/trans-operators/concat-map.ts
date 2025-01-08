@@ -16,33 +16,37 @@ export const concatMap =
     let innerAccumulator$: Observable<O> | undefined = undefined;
     // the previous subscription to the inner accumulator (we use it to unsubscribe)
     let prevSubscription: Subscription | undefined;
-    source$.subscribe({
-      next: (value: I) => {
-        // unsubscribe from the previous inner accumulator
-        if (prevSubscription) {
-          prevSubscription.unsubscribe();
-        }
-        // map the current value to an observable
-        const mapped$ = mapFn(value);
+    result$.onSubscribe(() =>
+      source$.subscribe({
+        next: (value: I) => {
+          // unsubscribe from the previous inner accumulator
+          if (prevSubscription) {
+            prevSubscription.unsubscribe();
+          }
+          // map the current value to an observable
+          const mapped$ = mapFn(value);
 
-        // concatenate the new observable to the inner accumulator
-        innerAccumulator$ = innerAccumulator$ ? concat<O, O>(mapped$)(innerAccumulator$) : mapped$;
+          // concatenate the new observable to the inner accumulator
+          innerAccumulator$ = innerAccumulator$
+            ? concat<O, O>(mapped$)(innerAccumulator$)
+            : mapped$;
 
-        // subscribe to the inner accumulator
-        prevSubscription = innerAccumulator$.subscribe({
-          next: (value: O) => result$.emit(value),
-          error: (err: Error) => result$.error(err),
-          complete: () => {
-            source$.isCompleted && result$.complete();
-          },
-        });
-      },
-      error: (err: Error) => result$.error(err),
-      complete: () => {
-        if (innerAccumulator$ && innerAccumulator$.isCompleted) {
-          result$.complete();
-        }
-      },
-    });
+          // subscribe to the inner accumulator
+          prevSubscription = innerAccumulator$.subscribe({
+            next: (value: O) => result$.emit(value),
+            error: (err: Error) => result$.error(err),
+            complete: () => {
+              source$.isCompleted && result$.complete();
+            },
+          });
+        },
+        error: (err: Error) => result$.error(err),
+        complete: () => {
+          if (innerAccumulator$ && innerAccumulator$.isCompleted) {
+            result$.complete();
+          }
+        },
+      })
+    );
     return result$;
   };

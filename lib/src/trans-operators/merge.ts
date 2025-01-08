@@ -11,16 +11,17 @@ import { Subject } from '../index.ts';
 export const merge =
   <I1, I2>(secondSource$: Observable<I2>): Operator<I1, I1 | I2> =>
   (firstSource$: Observable<I1>): Observable<I1 | I2> => {
-    const result$ = new Subject<I1 | I2>();
-    firstSource$.subscribe({
-      next: (value: I1) => result$.emit(value),
-      error: (err: Error) => result$.error(err),
-      complete: () => secondSource$.isCompleted && result$.complete(),
-    });
-    secondSource$.subscribe({
-      next: (value: I2) => result$.emit(value),
-      error: (err: Error) => result$.error(err),
-      complete: () => firstSource$.isCompleted && result$.complete(),
+    const result$ = new Subject<I1 | I2>((out$) => {
+      firstSource$.subscribe({
+        next: (value: I1) => out$.emit(value),
+        error: (err: Error) => out$.error(err),
+        complete: () => secondSource$.isCompleted && out$.complete(),
+      });
+      secondSource$.subscribe({
+        next: (value: I2) => out$.emit(value),
+        error: (err: Error) => out$.error(err),
+        complete: () => firstSource$.isCompleted && out$.complete(),
+      });
     });
     return result$;
   };

@@ -11,8 +11,7 @@ import { Subject } from '../index.ts';
  */
 export const flatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O> => {
   return (source$: Observable<I>): Observable<O> => {
-    const result$ = new Subject<O>();
-    result$.onSubscribe(() => {
+    const result$ = new Subject<O>((out$) => {
       source$.subscribe({
         next: (value: I) => {
           // Create a new inner observable for each value from the source observable
@@ -21,12 +20,12 @@ export const flatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O
           // Subscribe to the inner observable and emit its values to the result observable
           // note: the previous inner observable is still active and will continue to emit values
           innerObservable$.subscribe({
-            next: (value) => result$.emit(value),
-            error: (err) => result$.error(err),
-            complete: () => source$.isCompleted && result$.complete(),
+            next: (value) => out$.emit(value),
+            error: (err) => out$.error(err),
+            complete: () => source$.isCompleted && out$.complete(),
           });
         },
-        error: (err) => result$.error(err),
+        error: (err) => out$.error(err),
       });
     });
     return result$;

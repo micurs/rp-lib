@@ -8,7 +8,7 @@ import type { FullSubscriber, Observable, Subscriber, Subscription } from './typ
 /**
  * The type of the function that is executed on first subscription
  */
-type OnSubscribe = () => void;
+type OnSubscribe<T> = (obs$: Observable<T>) => void;
 
 /**
  * Check if a value is an OnSubscribe function
@@ -16,7 +16,7 @@ type OnSubscribe = () => void;
  * @param value - the value to check
  * @returns true if the value is an OnSubscribe function, false otherwise
  */
-const isOnSubscribe = (value: unknown): value is OnSubscribe => typeof value === 'function';
+const isOnSubscribe = <T>(value: unknown): value is OnSubscribe<T> => typeof value === 'function';
 
 /**
  * A generic multi-cast observable class.
@@ -32,14 +32,14 @@ export class Subject<T> implements Observable<T> {
   /**@internal */
   private _isCompleted: boolean = false;
   /**@internal */
-  private _emitter: (() => void) | null = null;
+  private _emitter: ((obs$: Observable<T>) => void) | null = null;
 
   /**
    * Create a new observable
    * @param emit -  the value to emit or the onSubscribe function to be executed on first subscription
    */
-  constructor(valueOrEmitter: T | undefined | (() => void) = undefined) {
-    if (isOnSubscribe(valueOrEmitter)) {
+  constructor(valueOrEmitter: T | undefined | ((obs$: Observable<T>) => void) = undefined) {
+    if (isOnSubscribe<T>(valueOrEmitter)) {
       this._emitter = valueOrEmitter;
       return;
     }
@@ -91,7 +91,7 @@ export class Subject<T> implements Observable<T> {
 
     // If we have a onSubscribe function, call it
     if (this._emitter) {
-      this._emitter();
+      this._emitter(this);
       this._emitter = null;
     }
 

@@ -1,6 +1,7 @@
 export * from './types.ts';
 export * from './observable.ts';
 export * from './creation-operators.ts';
+export * from './utility-operators/delay.ts';
 export * from './trans-operators/tap.ts';
 export * from './trans-operators/map.ts';
 export * from './trans-operators/merge.ts';

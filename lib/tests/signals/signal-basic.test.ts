@@ -3,7 +3,7 @@
 import { assertSpyCalls, spy } from 'jsr:@std/testing/mock';
 import { expect } from 'jsr:@std/expect';
 
-import { Signal } from '../../../lib/src/signals/signal.ts';
+import { Signal, Subject } from '../../src/index.ts';
 
 Deno.test('Creating an effect function with a signal', () => {
   const signal = new Signal(100);
@@ -90,4 +90,21 @@ Deno.test('Two computed signals emit their computed values when their dependent 
   expect(computed1.value).toBe(1100);
   expect(computed2.value).toBe(1200);
   assertSpyCalls(effect, 2);
+});
+
+Deno.test('An explicit effect on Signal is executed effect when the source Observable changes', () => {
+  const effect = spy();
+  const signal = new Signal(10);
+  signal.addEffect(effect);
+  assertSpyCalls(effect, 1);
+});
+
+Deno.test('A Signal created from an Observable will execute effect when the source Observable changes', () => {
+  const obs$ = new Subject(10);
+  const signal = Signal.fromObservable(obs$);
+  const effect = spy(() => {
+    console.log('spy1 called', signal.value);
+  });
+  Signal.effect(effect);
+  assertSpyCalls(effect, 1);
 });

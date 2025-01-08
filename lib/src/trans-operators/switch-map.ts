@@ -11,9 +11,8 @@ import { Subject } from '../index.ts';
  */
 export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O> => {
   return (source$: Observable<I>) => {
-    const result$ = new Subject<O>();
     let innerObservable$: Observable<O> | null = null;
-    result$.onSubscribe(() => {
+    const result$ = new Subject<O>((out$) => {
       source$.subscribe({
         next: (value: I) => {
           // Cancel the previous inner observable when a new value from the source observable is emitted
@@ -23,14 +22,14 @@ export const switchMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I,
           // Subscribe to the inner observable and emit its values to the result observable
           // Note: the previous inner observable has been cancelled. No new values will be emitted from it.
           innerObservable$.subscribe({
-            next: (value) => result$.emit(value),
-            error: (err: Error) => result$.error(err),
-            complete: () => source$.isCompleted && result$.complete(),
+            next: (value) => out$.emit(value),
+            error: (err: Error) => out$.error(err),
+            complete: () => source$.isCompleted && out$.complete(),
           });
         },
-        error: (err: Error) => result$.error(err),
+        error: (err: Error) => out$.error(err),
         complete: () => {
-          innerObservable$ !== null && innerObservable$.isCompleted && result$.complete();
+          innerObservable$ !== null && innerObservable$.isCompleted && out$.complete();
         },
       });
     });
