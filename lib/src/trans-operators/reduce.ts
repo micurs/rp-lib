@@ -9,7 +9,7 @@ import type { Observable } from '../types.ts';
  * @returns a new observable that emits reduced value on each source emitted value.
  */
 export const reduce =
-  <T, U>(reducer: (acc: U, value: T) => U, base: U) => (source$: Observable<T>) => {
+  <T, U>(reducer: (acc: U, value: T) => U, base: U) => (source$: Observable<T>): Observable<U> => {
     const result$ = new Subject<U>(() => {
       let acc = base;
       source$.subscribe({
