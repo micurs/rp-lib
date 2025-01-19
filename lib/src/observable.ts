@@ -3,7 +3,7 @@
  * @module subject
  */
 
-import type { FullSubscriber, Observable, Subscriber, Subscription } from './types.ts';
+import type { Emitter, FullSubscriber, Observable, Subscriber, Subscription } from './types.ts';
 
 /**
  * The type of the function that is executed on first subscription
@@ -32,13 +32,13 @@ export class Subject<T> implements Observable<T> {
   /**@internal */
   private _isCompleted: boolean = false;
   /**@internal */
-  private _emitter: ((obs$: Observable<T>) => void) | null = null;
+  private _emitter: Emitter<T> | null = null;
 
   /**
    * Create a new observable
    * @param emit -  the value to emit or the onSubscribe function to be executed on first subscription
    */
-  constructor(valueOrEmitter: T | undefined | ((obs$: Observable<T>) => void) = undefined) {
+  constructor(valueOrEmitter: T | undefined | Emitter<T> = undefined) {
     if (isOnSubscribe<T>(valueOrEmitter)) {
       this._emitter = valueOrEmitter;
       return;

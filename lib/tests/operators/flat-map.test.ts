@@ -38,7 +38,7 @@ Deno.test('Operator flatMap - emit values combining source and mapped observable
   const letters$ = from('a', 'b', 'c');
   const flatMapFn = (x: string) =>
     map((i: number) => x + i)(
-      interval(10, 'onSubscribe', 2),
+      interval(10, 2, 'onSubscribe'),
     );
   const result$ = flatMap(flatMapFn)(letters$);
   const next = spy();

@@ -26,6 +26,12 @@ export type SubscriberFn<T> = (value: T) => void;
 export type Subscriber<A> = SubscriberFn<A> | FullSubscriber<A>;
 
 /**
+ * An emitter function receive an observable and - in its implementation -
+ * emits new values into the observable.
+ */
+export type Emitter<T> = (obs$: Observable<T>) => void;
+
+/**
  * An Observable is an object that emits values and dispatch these
  * values to a list of Subscribers.
  */
@@ -34,8 +40,8 @@ export interface Observable<T> {
   emit(value: T): void;
   complete(): void;
   error(error: Error): void;
-  value: T | undefined;
-  isCompleted: boolean;
+  readonly value: T | undefined;
+  readonly isCompleted: boolean;
 }
 
 /**
@@ -51,6 +57,7 @@ export interface Subscription {
  * An Operator is a function that transform an Observable into a new one.
  */
 export type Operator<A, B> = (observable: Observable<A>) => Observable<B>;
+export type CreatorOp<A extends unknown[], B> = (...args: A) => Observable<B>;
 
 /**
  * An Effect is a function that is executed when an Observable is subscribed to.
