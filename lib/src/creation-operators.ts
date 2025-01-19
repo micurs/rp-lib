@@ -133,8 +133,8 @@ export const fromTimer = <T>(
  */
 export const interval = (
   delayMs: number,
-  start: 'onSubscribe' | 'now' = 'onSubscribe',
   count = Infinity,
+  start: 'onSubscribe' | 'now' = 'onSubscribe',
 ): Observable<number> => {
   const interval$ = new Subject<number>();
   const emitter = () => {
@@ -180,7 +180,7 @@ export const fromPromise = <T>(promise: Promise<T>): Subject<T> => {
  * @returns an Observable
  */
 export const fromGenerator = <T>(
-  generator: Generator<T>,
+  generator: Generator<T, unknown, unknown>,
   start: 'onSubscribe' | 'now' = 'onSubscribe',
 ): Observable<T> => {
   const generatorObs$ = new Subject<T>();
