@@ -30,9 +30,8 @@ export function pipe<I, O1, O2, O3, O>(
 export function pipe(
   ...operators: Operator<unknown, unknown>[]
 ): Operator<unknown, unknown> {
-  return (source: Observable<unknown>): Observable<unknown> => {
-    return operators.reduce((acc, operator) => operator(acc), source);
-  };
+  return (source: Observable<unknown>): Observable<unknown> =>
+    operators.reduce((acc, operator) => operator(acc), source);
 }
 
 /**
