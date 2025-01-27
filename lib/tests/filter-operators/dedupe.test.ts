@@ -1,6 +1,5 @@
 import { expect } from 'jsr:@std/expect';
 import { dedupe, fromArray } from '../../src/index.ts';
-import { defer } from '../utils.ts';
 
 Deno.test('dedupe does not emit the same consecutive value twice', () => {
   const receivedValues: number[] = [];
