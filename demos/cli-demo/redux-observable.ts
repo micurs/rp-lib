@@ -1,4 +1,4 @@
-import { dedupe, map, pipe, Subject, tap } from '@micurs/rp-lib';
+import { debounce, dedupe, map, pipe, Subject, tap } from '@micurs/rp-lib';
 import type { Observable } from '@micurs/rp-lib';
 
 // Types
@@ -97,20 +97,33 @@ const stateReducer = (state: MyStore = initialState, action: Action<MyActions>):
 const reducer = combineReducers([countReducer, stateReducer]);
 
 const actionObservable$ = new Subject<Action<MyActions>>();
-const store$ = pipe(
-  tap<Action<MyActions>>((action) => console.log('Action', action)),
-  redux(initialState, reducer),
-)(actionObservable$);
 
-// Create an observable on a subsection of the store. The result will emit
-// only when the subsection (the counter) changes.
+// Let's create the store observable using our redux operator.
+const store$ = redux(initialState, reducer)(actionObservable$);
+
+// const store$ = pipe(
+//   tap<Action<MyActions>>((action) => console.log('Action', action)),
+//   redux(initialState, reducer),
+//   debounce(500), // Debounce the store updates to avoid too frequent emissions
+// )(actionObservable$);
+
+/**
+ * Create an observable on a subsection of the store. The result will emit
+ * only, and only when the subsection (the counter) changes.
+ */
 const storeCounter$ = selectFromStore((store: MyStore) => store.counter)(store$);
 
-storeCounter$
+// Let's subscribe to the store and the counter observable
+store$
   .subscribe({
-    next: (state) => console.log('\tState', state),
+    next: (state) => console.log('\tState: ', state),
   });
+storeCounter$.subscribe({
+  next: (counter) => console.log('\tCounter: ', counter),
+});
 
+// Let's emit some actions to see how the store changes
+// ----------------------------------------------------------------------------
 actionObservable$.emit(setInitialState);
 actionObservable$.emit(increment);
 actionObservable$.emit(increment);

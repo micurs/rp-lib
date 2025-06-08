@@ -43,6 +43,14 @@ subject$.subscribe((value) => {
 });
 ```
 
+## Building the library
+
+To build the library, you can use the following command:
+
+```bash
+deno task build
+```
+
 ## License
 
 License: MIT

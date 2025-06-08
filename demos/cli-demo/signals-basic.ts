@@ -1,9 +1,10 @@
-import { Signal } from '@micurs/rp-lib';
+import { fromTimer, Signal } from '@micurs/rp-lib';
 
 export const main = () => {
   return new Promise<void>((resolve) => {
     console.log('Subscribing to a Signal using effect()');
     const signal = new Signal(100);
+    // const signal = Signal.fromObservable(fromTimer(10, [20, 350, 4050, 124050]));
 
     Signal.effect(() => {
       console.log(signal.value);
