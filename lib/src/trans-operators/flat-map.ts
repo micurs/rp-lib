@@ -11,6 +11,7 @@ import { Subject } from '../index.ts';
  */
 export const flatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O> => {
   return (source$: Observable<I>): Observable<O> => {
+    let innerCompleted = false;
     const result$ = new Subject<O>((out$) => {
       source$.subscribe({
         next: (value: I) => {
@@ -22,10 +23,14 @@ export const flatMap = <I, O>(mapFn: (value: I) => Observable<O>): Operator<I, O
           innerObservable$.subscribe({
             next: (value) => out$.emit(value),
             error: (err) => out$.error(err),
-            complete: () => source$.isCompleted && out$.complete(),
+            complete: () => {
+              source$.isCompleted && out$.complete();
+              innerCompleted = true;
+            },
           });
         },
         error: (err) => out$.error(err),
+        complete: () => innerCompleted && out$.complete(),
       });
     });
     return result$;
